@@ -1,2 +1,8 @@
+# optimzation files
+__pycache__/
+
+# local python environment
 env/
+
+# local vscode files 
 .vscode/
