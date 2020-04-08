@@ -6,3 +6,6 @@ env/
 
 # local vscode files 
 .vscode/
+
+# npm modules
+node_modules/

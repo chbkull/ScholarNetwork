@@ -5,6 +5,8 @@ from .models import Article
 from .serializers import ArticleSerializer
 from rest_framework import generics
 
+# pylint: disable=no-member
+
 class ArticleListCreate(generics.ListCreateAPIView):
-    queryset = Article.objects.all().filter(id=1)
+    queryset = Article.objects.all()[:10]
     serializer_class = ArticleSerializer
