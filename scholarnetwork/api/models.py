@@ -1,7 +1,7 @@
 from django.db import models
 
 class Article(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     name = models.TextField()
     affiliation = models.TextField()
     citedby = models.IntegerField()
@@ -13,3 +13,17 @@ class Article(models.Model):
 
     class Meta:
         db_table = 'articles'
+
+class Author(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.TextField()
+    affiliation = models.TextField()
+    citedby = models.TextField() # there are 8 tuples that all seem to offset this field and all others below by one column
+    attributes = models.TextField() # it's possible that this bad data leaked into other tables
+    page = models.TextField()
+    email = models.TextField()
+    interests = models.TextField()
+    url_picture = models.TextField()
+
+    class Meta:
+        db_table = 'authors'
