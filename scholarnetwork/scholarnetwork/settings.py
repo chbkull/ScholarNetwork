@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'scholarnetwork.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'scholarnetwork',
+        'NAME': 'scholarnetwork', # schema
         'USER': 'root',
         'PASSWORD': 'scholarnetwork',
         'host': 'localhost',
