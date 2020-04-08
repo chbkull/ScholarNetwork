@@ -1,8 +1,6 @@
 from django.shortcuts import render
-
-# Create your views here.
-from .models import Article
-from .serializers import ArticleSerializer
+from .models import Article, Author
+from .serializers import ArticleSerializer, AuthorSerializer
 from rest_framework import generics
 
 # pylint: disable=no-member
@@ -10,3 +8,7 @@ from rest_framework import generics
 class ArticleListCreate(generics.ListCreateAPIView):
     queryset = Article.objects.all()[:10]
     serializer_class = ArticleSerializer
+
+class AuthorListCreate(generics.ListCreateAPIView):
+    queryset = Author.objects.all()[:10]
+    serializer_class = AuthorSerializer
