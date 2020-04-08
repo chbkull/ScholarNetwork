@@ -100,7 +100,19 @@ Assuming you did all of the above, you should be good to go!
 
 ## Running Locally
 
-Make sure that your instance of the MySQL Server is running. Note that if you changed the login information for the MySQL Server, you will need to tinker with Django to set up the connection. If this is the case, open up `ScholarNet/scholarnetwork/scholarnetwork/settings.py`. Look for the `DATABASE` section and change the information to match the login you want the project to use. 
+Make sure that your instance of the MySQL Server is running. 
+
+If you changed the login information for the MySQL Server, you will need to tinker with Django to set up the connection. If this is the case, open up `ScholarNet/scholarnetwork/scholarnetwork/settings.py`. Look for the `DATABASE` section and change the information to match the login you want the project to use.
+
+Also if the local models ever change, you will need to migrate the changes back to the database from within `ScholarNet/scholarnetwork`:
+```bash
+python manage.py makemigrations <app_name>
+python manage.py migrate <app_name>
+```
+If the second command fails due to a preexisting table, you can fake the migration:
+```bash
+python manage.py migrate --fake <app_name>
+```
 
 To compile the JavaScript for the front end, navigate to `ScholarNet/scholarnetwork/frontend` and run 
 ```bash
