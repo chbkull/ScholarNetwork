@@ -27,7 +27,7 @@ from rest_framework.decorators import api_view
 @api_view(['GET'])
 def request_article(self):
     # result = Article.objects.get_article(2)
-    result = Article.objects.raw("SELECT * FROM articles LIMIT 10")
+    result = Article.objects.raw("SELECT * FROM articles LIMIT 20")
     serializer = ArticleSerializer(result, many=True)
     return Response(serializer.data)
             
