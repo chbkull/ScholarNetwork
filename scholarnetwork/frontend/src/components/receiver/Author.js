@@ -1,7 +1,7 @@
 // TODO
 
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, Fragment } from "react";
+import PropTypes from "prop-types";
 
 export class Author extends Component {
   // Don't call this.setState() here!
@@ -11,17 +11,17 @@ export class Author extends Component {
   //   };
 
   state = {
-    message: '',
+    message: "",
     success: false,
-    selector: '',
-    content: '',
+    selector: "",
+    content: "",
     result: [
       {
-        name: 'dsa',
-        citedby: 'f',
-        attributes: ['fds'],
-        email: 'fre',
-        author: 'gw',
+        name: "dsa",
+        citedby: "f",
+        attributes: ["fds"],
+        email: "fre",
+        author: "gw",
       },
     ],
   };
@@ -46,8 +46,8 @@ export class Author extends Component {
     const content = this.state.content;
     // this.props.getAuthorBy(user, login);
     this.setState({
-      selector: '',
-      content: '',
+      selector: "",
+      content: "",
     });
   };
 
