@@ -1,7 +1,7 @@
 // TODO
 
-import React, { Component, Fragment } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component, Fragment } from "react";
+import PropTypes from "prop-types";
 
 export class Article extends Component {
   // Don't call this.setState() here!
@@ -11,19 +11,19 @@ export class Article extends Component {
   //   };
 
   state = {
-    message: '',
+    message: "",
     success: false,
-    selector: '',
-    content: '',
+    selector: "",
+    content: "",
     result: [
       {
-        journal: 'dsa',
-        author: 'f',
-        co_author: ['fds'],
-        pub_title: 'fre',
-        pub_year: 'gw',
-        citations: 'fgs',
-        eprint: 'gsg',
+        journal: "dsa",
+        author: "f",
+        co_author: ["fds"],
+        pub_title: "fre",
+        pub_year: "gw",
+        citations: "fgs",
+        eprint: "gsg",
       },
     ],
   };
@@ -48,8 +48,8 @@ export class Article extends Component {
     const content = this.state.content;
     // this.props.getAuthorBy(user, login);
     this.setState({
-      selector: '',
-      content: '',
+      selector: "",
+      content: "",
     });
   };
 
@@ -76,13 +76,13 @@ export class Article extends Component {
     return (
       <div className="card card-body mt-4 mb-4">
         <h2>Search Article</h2>
-        <fieldset class="form-group">
+        <fieldset className="form-group">
           <legend>Radio buttons</legend>
-          <div class="form-check">
-            <label class="form-check-label">
+          <div className="form-check">
+            <label className="form-check-label">
               <input
                 type="radio"
-                class="form-check-input"
+                className="form-check-input"
                 name="optionsRadios"
                 id="optionsRadios1"
                 value="pub_title"
@@ -91,11 +91,11 @@ export class Article extends Component {
               pub_title
             </label>
           </div>
-          <div class="form-check">
-            <label class="form-check-label">
+          <div className="form-check">
+            <label className="form-check-label">
               <input
                 type="radio"
-                class="form-check-input"
+                className="form-check-input"
                 name="optionsRadios"
                 id="optionsRadios2"
                 value="pub_year"
@@ -122,7 +122,7 @@ export class Article extends Component {
             </button>
           </div>
         </form>
-        <table class="table table-hover">
+        <table className="table table-hover">
           <thead>
             <tr>
               <th scope="col">pub_titles</th>
