@@ -12,7 +12,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch("api/articles")
+    fetch("api/articles/searchtitle/Database")
       .then(response => {
         if (response.status > 400) {
           return this.setState(() => {
@@ -33,16 +33,16 @@ class App extends Component {
 
   render() {
     return (
-        <ul>
-          {this.state.data.map(article => {
-            return (
-              <li key={article.id}>
-                {article.name} - {article.pub_title}
-              </li>
-            );
-          })}
-        </ul>
-      );
+      <ul>
+        {this.state.data.map(contact => {
+          return (
+            <li key={contact.id}>
+              {contact.name} - {contact.pub_title}
+            </li>
+          );
+        })}
+      </ul>
+    );
   }
 }
 

@@ -27,3 +27,14 @@ class Author(models.Model):
 
     class Meta:
         db_table = 'authors'
+
+class User(models.Model):
+    id = models.AutoField(primary_key=True)
+    email = models.TextField()
+    password = models.TextField()
+    affiliation = models.TextField()
+    history = models.TextField()
+    interests = models.TextField()
+
+    class Meta:
+        db_table = 'users'
