@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+    <link rel="stylesheet" type="text/css" href="style2.css" />
+
+    <title>ScholarNet</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <div id = "container">
+          <div id = "header">
+            <nav>
+                <ul>
+                  <li><a href = "index.html"> Home </a></li>
+                  <li><a href = "Login.html"> Log in </a></li>
+                  <li><a href = "Users.html"> Sign up </a></li>
+                  <li><a href = "Search.html"> Search </a></li>
+                  <li><a href = "Network.html"> Network </a></li>
+                </ul>
+                
+          </div>
+          <h1>Search</h1>
+    </div>
+        <div id = "content">
+          <div id = "main">
+
+            <form class="form-horizontal">
+                <fieldset>
+                
+                <!-- Form Name -->
+                <legend>Search by Author</legend>
+                <br>
+                <!-- Multiple Radios (inline) -->
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="radios">Search By:</label>
+                  <div class="col-md-4"> 
+                    <label class="radio-inline" for="radios-0">
+                      <input type="radio" name="radios" id="radios-0" value="" checked="checked">
+                      Affiliation
+                    </label> 
+                    <label class="radio-inline" for="radios-1">
+                      <input type="radio" name="radios" id="radios-1" value="">
+                      Name
+                    </label>
+                  </div>
+                </div>
+                <br>
+                <!-- Search input-->
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="searchinput">Search </label>
+                  <div class="col-md-4">
+                    <input id="textinput" name="searchinput" type="search" placeholder="name/ keyword" class="form-control input-md">
+                    
+                  </div>
+                </div>
+                <br>
+                <!-- Button -->
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="singlebutton"></label>
+                  <div class="col-md-4">
+                    <button id="buttonid" name="singlebutton" class="btn btn-primary">Submit</button>
+                  </div>
+                </div>
+                <br>
+                 <!-- Textarea -->
+                 <div class="form-group">
+                    <label class="col-md-4 control-label" for="textarea">Results</label>
+                    <div class="col-md-6">                     
+                     <textarea class="form-control" id="textinput" name="textinput"></textarea>
+                </div>
+                </div>
+                
+                </fieldset>
+                </form>
+
+          </div>
+          
+        </div>
+        <div id = "footer">
+          
+        </div> 
+      </div>
+  </body>
+</html>
