@@ -23,11 +23,26 @@ from rest_framework.renderers import JSONRenderer
 
 from rest_framework import status
 from rest_framework.decorators import api_view
+from django.http import Http404
 
-@api_view(['GET'])
+@api_view(['GET', 'DELETE'])
 def request_article(self):
     # result = Article.objects.get_article(2)
     result = Article.objects.raw("SELECT * FROM articles LIMIT 20")
     serializer = ArticleSerializer(result, many=True)
     return Response(serializer.data)
-            
+
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import JSONParser
+
+@csrf_exempt
+def article_detail(request, pk):
+    try:
+        article = Article.objects.raw("SELECT * FROM articles WHERE id = %s", [pk])
+    except Article.DoesNotExist:
+        return HttpResponse(status=404)
+    
+    if request.method == 'GET':
+        serializer = ArticleSerializer(article, many=True)
+        return JsonResponse(serializer.data, safe=False)
