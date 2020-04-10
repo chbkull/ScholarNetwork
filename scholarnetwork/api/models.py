@@ -1,13 +1,5 @@
 from django.db import models
 
-# class ArticleManager(models.Manager):
-#     def get_article(self, article_id):
-#         return self.raw("SELECT * FROM articles WHERE id = %s", [article_id])
-    
-#     def get_many_articles(self, count):
-#         return self.raw("SELECT * FROM articles LIMIT %s", [count])
-
-
 class Article(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.TextField()
@@ -19,8 +11,6 @@ class Article(models.Model):
     pub_author = models.TextField()
     eprint = models.TextField()
 
-    # objects = ArticleManager()
-    
     class Meta:
         db_table = 'articles'
 
@@ -37,3 +27,14 @@ class Author(models.Model):
 
     class Meta:
         db_table = 'authors'
+
+class User(models.Model):
+    id = models.AutoField(primary_key=True)
+    email = models.TextField()
+    password = models.TextField()
+    affiliation = models.TextField()
+    history = models.TextField()
+    interests = models.TextField()
+
+    class Meta:
+        db_table = 'users'
