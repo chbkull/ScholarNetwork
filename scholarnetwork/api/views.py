@@ -39,13 +39,15 @@ class ArticleList(APIView):
 class ArticleDetail(APIView):
     def get_object(self, pk):
         try:
-            return Article.objects.raw("SELECT * FROM articles WHERE id = %s", [pk])
+            # return Article.objects.raw("SELECT * FROM articles WHERE id = %s", [pk])
+            return Article.objects.get(pk=pk)
         except Article.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
     
     def get(self, request, pk, format=None):
         article = self.get_object(pk)
-        serializer = ArticleSerializer(article, many=True)
+        # serializer = ArticleSerializer(article, many=True)
+        serializer = ArticleSerializer(article)
         return Response(serializer.data)
     
     def put(self, request, pk, format=None):
@@ -94,13 +96,15 @@ class AuthorList(APIView):
 class AuthorDetail(APIView):
     def get_object(self, pk):
         try:
-            return Author.objects.raw("SELECT * FROM authors WHERE id = %s", [pk])
+            # return Author.objects.raw("SELECT * FROM authors WHERE id = %s", [pk])
+            return Author.objects.get(pk=pk)
         except Author.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
     
     def get(self, request, pk, format=None):
         author = self.get_object(pk)
-        serializer = AuthorSerializer(author, many=True)
+        # serializer = AuthorSerializer(author, many=True)
+        serializer = AuthorSerializer(author)
         return Response(serializer.data)
     
     def put(self, request, pk, format=None):
@@ -145,20 +149,25 @@ class UserList(APIView):
 class UserDetail(APIView):
     def get_object(self, pk):
         try:
-            return User.objects.raw("SELECT * FROM users WHERE id = %s", [pk])
+            # return User.objects.raw("SELECT * FROM users WHERE id = %s", [pk])
+            return User.objects.get(pk=pk)
         except User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
     
     def get(self, request, pk, format=None):
         user = self.get_object(pk)
-        serializer = UserSerializer(user, many=True)
+        # serializer = UserSerializer(user, many=True)
+        serializer = UserSerializer(user)
         return Response(serializer.data)
     
     def put(self, request, pk, format=None):
         user = self.get_object(pk)
         serializer = UserSerializer(user, data=request.data)
+        print("serializing")
         if serializer.is_valid():
+            print("valid")
             serializer.save()
+            print("saved")
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
