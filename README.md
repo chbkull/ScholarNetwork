@@ -131,3 +131,30 @@ If everything compiles successfully, you should see a prompt to open up http://1
 This project's stack is comprised of a MySQL database, Django as a backend framework, and React as a front end framework. At the moment this project is not deployed to a remote server so all components are run locally. 
 
 The actual file structure is mostly wrapped up inside of the `ScholarNet/scholarnetwork`. This is the overarching Django project. Inside there are three main folders. `api` handles the communication with the MySQL database and interfaces with it to create endpoints that can be requested by some form of front end. `frontend` is the aptly named frontend, which contains JavaScript libraries managed by npm. React is the primary libary being used. `scholarnetwork` is used by the overall project to manage everything.
+
+
+
+## Frontend Setup
+
+1. In 'scholarnetwork' folder (ls -> see scholarnetwork folder and frontend folder)
+
+```
+npm init -y
+```
+
+2. package intall
+
+```
+npm i axios prop-types react react-alert react-alert-template-basic react-dom react-router-dom react-transition-group @babel/core @babel/preset-env @babel/preset-react babel-eslint babel-loader babel-plugin-transform-class-properties eslint eslint-config-airbnb eslint-config-prettier eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react husky prettier pretty-quick webpack webpack-cli
+```
+
+3. build and run 
+
+```python
+python manage.py makemigrations
+python manage.py migrate
+npm run build
+python manage.py runserver 
+```
+
+ Then go to browser, by default http://127.0.0.1:8000/
