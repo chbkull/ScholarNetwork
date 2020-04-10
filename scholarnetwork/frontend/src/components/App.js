@@ -12,7 +12,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    fetch("api/articles/1")
+    fetch("api/articles/searchtitle/Database")
       .then(response => {
         if (response.status > 400) {
           return this.setState(() => {

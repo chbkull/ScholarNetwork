@@ -166,3 +166,15 @@ class UserDetail(APIView):
         user = self.get_object(pk)
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class UserSearchEmail(APIView):
+    def get(self, request, searchby, format=None):
+        users = User.objects.filter(email__icontains=searchby)
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+
+class UserSearchAffiliation(APIView):
+    def get(self, request, searchby, format=None):
+        users = User.objects.filter(affiliation__icontains=searchby)
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
