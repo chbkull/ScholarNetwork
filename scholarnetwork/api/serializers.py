@@ -17,6 +17,7 @@ class ArticleSerializer(serializers.ModelSerializer):
         instance.citations = validated_data.get('citations', instance.citations)
         instance.pub_author = validated_data.get('pub_author', instance.pub_author)
         instance.eprint = validated_data.get('eprint', instance.eprint)
+        return instance
     
     class Meta:
         model = Article
@@ -36,6 +37,7 @@ class AuthorSerializer(serializers.ModelSerializer):
         instance.email = validated_data.get('email', instance.email)
         instance.interests = validated_data.get('interests', instance.interests)
         instance.url_picture = validated_data.get('url_picture', instance.url_picture)
+        return instance
     
     class Meta:
         model = Author
@@ -52,7 +54,8 @@ class UserSerializer(serializers.ModelSerializer):
         instance.affiliation = validated_data.get('affiliation', instance.affiliation)
         instance.history = validated_data.get('history', instance.history)
         instance.interests = validated_data.get('interests', instance.interests)
+        return instance
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'password', 'affiliation', 'history', 'interests')
+        fields = ['id', 'email', 'password', 'affiliation', 'history', 'interests']
