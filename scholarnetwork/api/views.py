@@ -5,10 +5,10 @@ from rest_framework import generics
 
 # pylint: disable=no-member
 
-class ArticleListCreate(generics.ListCreateAPIView):
-    queryset = Article.objects.get_article(10)
-    # queryset = Article.objects.all()[:10]
-    serializer_class = ArticleSerializer
+# class ArticleListCreate(generics.ListCreateAPIView):
+#     queryset = Article.objects.get_article(10)
+#     # queryset = Article.objects.all()[:10]
+#     serializer_class = ArticleSerializer
 
 class AuthorListCreate(generics.ListCreateAPIView):
     queryset = Author.objects.all()[:10]
@@ -25,24 +25,44 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from django.http import Http404
 
-@api_view(['GET', 'DELETE'])
-def request_article(self):
-    # result = Article.objects.get_article(2)
-    result = Article.objects.raw("SELECT * FROM articles LIMIT 20")
-    serializer = ArticleSerializer(result, many=True)
-    return Response(serializer.data)
-
 from django.http import HttpResponse, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 
-@csrf_exempt
-def article_detail(request, pk):
-    try:
-        article = Article.objects.raw("SELECT * FROM articles WHERE id = %s", [pk])
-    except Article.DoesNotExist:
-        return HttpResponse(status=404)
+class ArticleList(APIView):
+    def get(self, request, foramt=None):
+        articles = Article.objects.raw("SELECT * FROM articles LIMIT 10")
+        serializer = ArticleSerializer(articles, many=True)
+        return Response(serializer.data)
     
-    if request.method == 'GET':
+    def post(self, request, format=None):
+        serializer = ArticleSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ArticleDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Article.objects.raw("SELECT * FROM articles WHERE id = %s", [pk])
+        except Article.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    def get(self, request, pk, format=None):
+        article = self.get_object(pk)
         serializer = ArticleSerializer(article, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        return Response(serializer.data)
+    
+    def put(self, request, pk, format=None):
+        article = self.get_object(pk)
+        serializer = ArticleSerializer(article, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk, format=None):
+        article = self.get_object(pk)
+        article.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

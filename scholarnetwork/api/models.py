@@ -1,11 +1,11 @@
 from django.db import models
 
-class ArticleManager(models.Manager):
-    def get_article(self, article_id):
-        return self.raw("SELECT * FROM articles WHERE id = %s", [article_id])
+# class ArticleManager(models.Manager):
+#     def get_article(self, article_id):
+#         return self.raw("SELECT * FROM articles WHERE id = %s", [article_id])
     
-    def get_many_articles(self, count):
-        return self.raw("SELECT * FROM articles LIMIT %s", [count])
+#     def get_many_articles(self, count):
+#         return self.raw("SELECT * FROM articles LIMIT %s", [count])
 
 
 class Article(models.Model):
@@ -19,8 +19,8 @@ class Article(models.Model):
     pub_author = models.TextField()
     eprint = models.TextField()
 
-    objects = ArticleManager()
-
+    # objects = ArticleManager()
+    
     class Meta:
         db_table = 'articles'
 
