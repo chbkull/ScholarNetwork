@@ -2,30 +2,19 @@
 
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
+// import { getArticleByTitle, getArticleByAuthor } from "../action/author";
+
+import axios from "axios";
 
 export class Article extends Component {
   // Don't call this.setState() here!
 
-  //   static propTypes = {
-  //     getArticleBy: PropTypes.function.isRequired,
-  //   };
-
   state = {
     message: "",
-    success: false,
+    // success: false,
     selector: "",
     content: "",
-    result: [
-      {
-        journal: "dsa",
-        author: "f",
-        co_author: ["fds"],
-        pub_title: "fre",
-        pub_year: "gw",
-        citations: "fgs",
-        eprint: "gsg",
-      },
-    ],
+    result: [],
   };
 
   onCheck = (e) => {
@@ -46,28 +35,58 @@ export class Article extends Component {
     e.preventDefault();
     const name = this.state.selector;
     const content = this.state.content;
-    // this.props.getAuthorBy(user, login);
-    this.setState({
-      selector: "",
-      content: "",
-    });
+    if (name === "author") {
+      axios
+        .get("api/articles/searchauthor/" + content)
+        .then((res) => {
+          console.log(res);
+          this.setState({ result: res.data }, () => {
+            console.log(this.state.result);
+          });
+          return { data: res, msg: "failed" };
+        })
+        .catch((err) => {
+          return { data: {}, msg: "failed" };
+        });
+    }
+    if (name === "pub_title") {
+      axios
+        .get("api/articles/searchtitle/" + content)
+        .then((res) => {
+          console.log(res);
+          this.setState({ result: res.data }, () => {
+            console.log(this.state.result);
+          });
+          return { data: res, msg: "failed" };
+        })
+        .catch((err) => {
+          return { data: {}, msg: "failed" };
+        });
+    }
   };
 
   render() {
     const results = this.state.result;
-
     const module = results.map((entry) => {
+      const button = <Fragment></Fragment>;
+      if (!entry.eprint) {
+        button = (
+          <button type="button" class="btn btn-link" onclick={entry.eprint}>
+            Click
+          </button>
+        );
+      }
       return (
         <Fragment>
           <tr class="table-light">
             <th scope="row">{entry.pub_title}</th>
-            <td>{entry.journal}</td>
-            <td>{entry.author}</td>
-            <td>{entry.co_author}</td>
+            <td>{entry.name}</td>
+            <td>{entry.affiliation}</td>
+            <td>{entry.citedby}</td>
             <td>{entry.pub_year}</td>
-            {/* <td>{entry.pub_title}</td> */}
             <td>{entry.citations}</td>
-            <td>{entry.eprint}</td>
+            <td>{entry.pub_author}</td>
+            <td>{button}</td>
           </tr>
         </Fragment>
       );
@@ -98,10 +117,10 @@ export class Article extends Component {
                 className="form-check-input"
                 name="optionsRadios"
                 id="optionsRadios2"
-                value="pub_year"
+                value="author"
                 onChange={this.onCheck}
               />
-              pub_year
+              author
             </label>
           </div>
         </fieldset>
@@ -125,12 +144,13 @@ export class Article extends Component {
         <table className="table table-hover">
           <thead>
             <tr>
-              <th scope="col">pub_titles</th>
-              <th scope="col">journal</th>
-              <th scope="col">author</th>
-              <th scope="col">co_author</th>
+              <th scope="col">pub_title</th>
+              <th scope="col">name</th>
+              <th scope="col">affiliation</th>
+              <th scope="col">citedby</th>
               <th scope="col">pub_year</th>
               <th scope="col">citations</th>
+              <th scope="col">pub_author</th>
               <th scope="col">eprint</th>
             </tr>
           </thead>
