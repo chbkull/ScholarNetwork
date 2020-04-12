@@ -2,28 +2,17 @@
 
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
+import axios from "axios";
 
 export class Author extends Component {
   // Don't call this.setState() here!
-
-  //   static propTypes = {
-  //     getArticleBy: PropTypes.function.isRequired,
-  //   };
 
   state = {
     message: "",
     success: false,
     selector: "",
     content: "",
-    result: [
-      {
-        name: "dsa",
-        citedby: "f",
-        attributes: ["fds"],
-        email: "fre",
-        author: "gw",
-      },
-    ],
+    result: [],
   };
 
   onCheck = (e) => {
@@ -44,11 +33,34 @@ export class Author extends Component {
     e.preventDefault();
     const name = this.state.selector;
     const content = this.state.content;
-    // this.props.getAuthorBy(user, login);
-    this.setState({
-      selector: "",
-      content: "",
-    });
+    if (name === "name") {
+      axios
+        .get("api/authors/searchname/" + content)
+        .then((res) => {
+          console.log(res);
+          this.setState({ result: res.data }, () => {
+            console.log(this.state.result);
+          });
+          return { data: res, msg: "failed" };
+        })
+        .catch((err) => {
+          return { data: {}, msg: "failed" };
+        });
+    }
+    if (name === "affiliation") {
+      axios
+        .get("api/authors/searchaffiliation/" + content)
+        .then((res) => {
+          console.log(res);
+          this.setState({ result: res.data }, () => {
+            console.log(this.state.result);
+          });
+          return { data: res, msg: "failed" };
+        })
+        .catch((err) => {
+          return { data: {}, msg: "failed" };
+        });
+    }
   };
 
   render() {
