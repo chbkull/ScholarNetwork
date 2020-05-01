@@ -15,6 +15,8 @@ urlpatterns = [
     path('api/users/<int:pk>', views.UserDetail.as_view()),
     path('api/users/searchemail/<slug:searchby>', views.UserSearchEmail.as_view()),
     path('api/users/searchaffiliation/<slug:searchby>', views.UserSearchAffiliation.as_view()),
+    path('api/articlessql/', views.ArticleSQLList),
+    path('api/articlessqldetail/<int:id>', views.ArticleSQLDetail)
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
