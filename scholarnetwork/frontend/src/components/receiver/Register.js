@@ -1,7 +1,7 @@
 // TODO
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 export class Register extends Component {
   // Don't call this.setState() here!
@@ -14,15 +14,15 @@ export class Register extends Component {
   //   };
 
   state = {
-    author: '',
-    affiliation: '',
-    interests: '',
-    name: '',
-    url_picture: '',
-    birthYear: '',
-    email: '',
-    message: '',
-    password: '',
+    author: "",
+    affiliation: "",
+    interests: "",
+    name: "",
+    url_picture: "",
+    birthYear: "",
+    email: "",
+    message: "",
+    password: "",
   };
 
   onChange = (e) => {
@@ -34,20 +34,20 @@ export class Register extends Component {
   onClick = (e) => {
     this.setState(
       {
-        author: '',
-        affiliation: '',
-        interests: '',
-        name: '',
-        url_picture: '',
-        birthYear: '',
-        email: '',
-        message: '',
-        password: '',
+        author: "",
+        affiliation: "",
+        interests: "",
+        name: "",
+        url_picture: "",
+        birthYear: "",
+        email: "",
+        message: "",
+        password: "",
       },
       () => {
-        document.getElementById('registerForm').reset();
+        document.getElementById("registerForm").reset();
         console.log(this.state);
-      },
+      }
     );
   };
 
@@ -57,17 +57,29 @@ export class Register extends Component {
 
     const newUser = { author, affiliation, interests, name, url_picture, birthYear, email };
     // this.props.insertUser(newUser);
+    axios
+      .get("api/users/searchemail/<slug:searchby>", {
+        params: {
+          email: e,
+        },
+      })
+      .then((res) => {
+        return { data: res, msg: "fail" };
+      })
+      .catch((err) => {
+        return err;
+      });
 
     this.setState({
-      author: '',
-      affiliation: '',
-      interests: '',
-      name: '',
-      url_picture: '',
-      birthYear: '',
-      email: '',
-      message: 'Successfully created a new user',
-      password: '',
+      author: "",
+      affiliation: "",
+      interests: "",
+      name: "",
+      url_picture: "",
+      birthYear: "",
+      email: "",
+      message: "Successfully created a new user",
+      password: "",
     });
   };
 

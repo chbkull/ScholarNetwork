@@ -1,22 +1,22 @@
-import React, { Component, Fragment } from 'react';
-import ReactDOM from 'react-dom';
-import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import React, { Component, Fragment } from "react";
+import ReactDOM from "react-dom";
+import { HashRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
 // import { Provider as AlertProvider } from 'react-alert';
 // import AlertTemplate from 'react-alert-template-basic';
 
-import Header from './layout/Header';
-import Login from './receiver/Login';
-import Edit from './receiver/Edit';
-import Article from './receiver/Article';
-import Author from './receiver/Author';
-import Register from './receiver/Register';
+import Header from "./layout/Header";
+import Login from "./receiver/Login";
+import Edit from "./receiver/Edit";
+import Article from "./receiver/Article";
+import Author from "./receiver/Author";
+import Register from "./receiver/Register";
 
 class App extends Component {
   state = {
-    email: '',
-    password: '',
-    status: '',
+    email: "",
+    password: "",
+    status: "",
   };
 
   setUser = (e, p, s) => {
@@ -63,4 +63,4 @@ class App extends Component {
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(<App />, document.getElementById("app"));
