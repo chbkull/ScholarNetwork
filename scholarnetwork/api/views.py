@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Article, Author, User
-from .serializers import ArticleSerializer, AuthorSerializer, UserSerializer
+from .models import Article, Author, User, ArticleSQL
+from .serializers import ArticleSerializer, AuthorSerializer, UserSerializer, ArticleSQLSerializer
 from rest_framework import generics
 
 # pylint: disable=no-member
@@ -187,3 +187,40 @@ class UserSearchAffiliation(APIView):
         users = User.objects.filter(affiliation__icontains=searchby)
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
+
+
+@api_view(['GET', 'POST'])
+def ArticleSQLList(request, format=None):
+    if request.method == 'GET':
+        articles = ArticleSQL.objects.all()
+        serializer = ArticleSQLSerializer(articles, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = ArticleSQLSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def ArticleSQLDetail(request, id, format=None):
+    article = ArticleSQL.objects.get(id)
+    if article is None:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        serializer = ArticleSQLSerializer(article)
+        return Response(serializer.data)
+    
+    elif request.method == 'PUT':
+        serializer = ArticleSQLSerializer(article, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'DELETE':
+        article.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
