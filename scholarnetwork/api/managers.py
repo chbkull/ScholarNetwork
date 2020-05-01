@@ -46,11 +46,29 @@ class ArticleSQLManager():
         cursor.execute(query)
 
     @staticmethod
+    def insert(c):
+        cursor = connection.cursor()
+        query = """INSERT INTO articles
+                    (id, name, affiliation, citedby, pub_title, pub_year, citations, pub_author, eprint)
+                    VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}',)""".format(
+                    c.id,
+                    c.name,
+                    c.affiliation,
+                    c.citedby,
+                    c.pub_title,
+                    c.pub_year,
+                    c.citations,
+                    c.pub_author,
+                    c.eprint)
+        
+        cursor.execute(query)
+
+    @staticmethod
     def all():
         cursor = connection.cursor()
         query = """SELECT id, name, affiliation, citedby, pub_title, pub_year,
                     citations, pub_author, eprint
-                  FROM articles;"""
+                  FROM articles LIMIT 10;"""
 
         cursor.execute(query)
         objects = []
@@ -60,6 +78,7 @@ class ArticleSQLManager():
         for row in cursor.fetchall():
             c = ArticleSQL()
             c.id = row[0],
+            # c.id = c.id[0],
             c.name = row[1],
             c.affiliation = row[2],
             c.citedby = row[3],
@@ -83,11 +102,13 @@ class ArticleSQLManager():
         objects = []
 
         from .models import ArticleSQL
-        print("fetching")
 
         for row in cursor.fetchall():
+            print(row)
             c = ArticleSQL()
             c.id = row[0],
+            # c.id = c.id[0]
+            # print(c.id[0])
             c.name = row[1],
             c.affiliation = row[2],
             c.citedby = row[3],
