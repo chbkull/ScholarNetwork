@@ -24,19 +24,18 @@ class ArticleSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'affiliation', 'citedby', 'pub_title', 'pub_year', 'citations', 'pub_author', 'eprint')
 
 class ArticleSQLSerializer(serializers.Serializer):
-    id = serializers.CharField(read_only=True)
+    id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(required=True, max_length=1024)
     affiliation = serializers.CharField(required=True, max_length=1024)
-    citedby = serializers.CharField(required=True, max_length=1024)
+    citedby = serializers.IntegerField(required=True)
     pub_title = serializers.CharField(required=True, max_length=1024)
-    pub_year = serializers.CharField(required=True, max_length=1024) # no year serializer?
-    citations = serializers.CharField(required=True, max_length=1024)
+    pub_year = serializers.IntegerField(required=True) # no year serializer?
+    citations = serializers.IntegerField(required=True)
     pub_author = serializers.CharField(required=True, max_length=1024)
     eprint = serializers.CharField(required=True, max_length=1024)
 
     def create(self, validated_data):
         c = ArticleSQL()
-        c.id = validated_data.get("id")
         c.name = validated_data.get("name")
         c.affiliation = validated_data.get("affiliation")
         c.citedby = validated_data.get("citedby")
@@ -46,11 +45,10 @@ class ArticleSQLSerializer(serializers.Serializer):
         c.pub_author = validated_data.get("pub_author")
         c.eprint = validated_data.get("eprint")
         c.save()
+        c.id = ArticleSQL.objects.last_id()
         return c
     
-    def update(self, validated_data):
-        c = ArticleSQL()
-        c.id = validated_data.get("id", c.id)
+    def update(self, c, validated_data):
         c.name = validated_data.get("name", c.name)
         c.affiliation = validated_data.get("affiliation", c.affiliation)
         c.citedby = validated_data.get("citedby", c.citedby)
