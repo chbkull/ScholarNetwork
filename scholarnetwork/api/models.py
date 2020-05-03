@@ -1,5 +1,5 @@
 from django.db import models
-from .managers import ArticleSQLManager
+from .managers import ArticleSQLManager, AuthorSQLManager
 
 class Article(models.Model):
     id = models.AutoField(primary_key=True)
@@ -53,6 +53,29 @@ class Author(models.Model):
 
     class Meta:
         db_table = 'authors'
+
+class AuthorSQL():
+    objects = AuthorSQLManager()
+
+    def __init__(self):
+        self.id = None
+        self.name = None
+        self.affiliation = None
+        self.citedby = None
+        self.attributes = None
+        self.page = None
+        self.email = None
+        self.interests = None
+        self.url_picture = None
+    
+    def save(self):
+        if self.id is not None:
+            self.objects.update(self)
+        else:
+            self.objects.insert(self)
+    
+    def delete(self):
+        self.objects.delete(self)
 
 class User(models.Model):
     id = models.AutoField(primary_key=True)
