@@ -24,7 +24,7 @@ from rest_framework.parsers import JSONParser
 
 class ArticleList(APIView):
     def get(self, request, format=None):
-        articles = Article.objects.raw("SELECT * FROM articles LIMIT 100")
+        articles = Article.objects.raw("SELECT * FROM articles LIMIT 10")
         serializer = ArticleSerializer(articles, many=True)
         return Response(serializer.data)
     
@@ -224,3 +224,17 @@ def ArticleSQLDetail(request, id, format=None):
     elif request.method == 'DELETE':
         article.delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def ArticleSQLSearchTitle(request, search_term, format=None):
+    if request.method == 'GET':
+        articles = ArticleSQL.objects.search_title(search_term)
+        serializer = ArticleSQLSerializer(articles, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def ArticleSQLSearchAuthor(request, search_term, format=None):
+    if request.method == 'GET':
+        articles = ArticleSQL.objects.search_author(search_term)
+        serializer = ArticleSQLSerializer(articles, many=True)
+        return Response(serializer.data)
