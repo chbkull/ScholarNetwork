@@ -1,71 +1,91 @@
 import axios from "axios";
+import 'regenerator-runtime/runtime';
+import { async } from "regenerator-runtime/runtime";
+import Profile from "../receiver/Profile";
+// import { async } from "regenerator-runtime";
 
-// GET LEADS
-export const getUserByEmail = (e) => {
-  axios
-    .get("api/users/searchemail/<slug:searchby>", {
-      params: {
-        email: e,
-      },
-    })
-    .then((res) => {
-      return { data: res, msg: "fail" };
+// // GET LEADS
+export const getUserByEmail = async(req,res) => {
+  await axios
+    .get("api/users/searchemail/" + req.email)
+    .then((result) => {
+      res.data = result.data;
+      res.msg = "search succeed";
     })
     .catch((err) => {
-      return err;
+      res.data = [];
+      res.msg = "server error";
     });
 };
 
-// path('api/users/<int:pk>', views.UserDetail.as_view()),
-export const getUserByID = (req) => {
-  axios
-    .get("api/users/", {
-      params: {
-        id: req,
-      },
-    })
-    .then((res) => {
-      return res;
+// insert user acccount
+export const insertUser = async(req,res) => {
+  await axios.post("api/users/",
+  {
+    email: req.email,
+    password: req.password
+  })
+  .then(result=> {
+    res.data = [result.data];
+    res.msg = "sign up successfully";
+  })
+  .catch(err=>{
+    res.data = [];
+    res.msg = "server error";
+  });
+
+}
+
+export const getUserByID = async (req,res) => {
+  await axios
+    .get("api/users/"+ req.id)
+    .then((result) => {
+      res.data = result.data;
+      res.msg = "search succeed";
     })
     .catch((err) => {
-      return err;
+      res.data = [];
+      res.msg = "server error";
     });
 };
 
-export const insertUser = (req) => {
-  axios
-    .get("api/users/")
-
-    .then((res) => {
-      return res;
+export const updateUserByID = async (req,res) => {
+  await axios
+    .put("api/users/"+req.id, {
+      id : req.id,
+      email: req.email,
+      password: req.password,
+      affiliation: req.affiliation,
+      interests: req.interests,
+      history:req.history,
+    })
+    .then((result) => {
+      res.data = req;
+      res.msg = "update succeed";
     })
     .catch((err) => {
-      return err;
+      res.data = [];
+      res.msg = "server error";
     });
 };
 
-export const updateUserByID = (req) => {
-  axios
-    .put("api/users/", {
-      id: req,
-    })
-    .then((res) => {
-      return res;
+export const deleteUserByID = async (req,res) => {
+  await axios
+    .delete("api/users/"+req.id)
+    .then((result) => {
+      console.log(result);
+      if (res.data.length === 0){
+        res.data = result.data;
+        res.msg = "user not exist";
+      }else{
+        res.data = [];
+        res.msg = "delete succeed";
+      }
+
     })
     .catch((err) => {
-      return err;
+      res.data = [];
+      res.msg = "server error";
     });
 };
 
-export const deleteUserByID = (req) => {
-  axios
-    .delete("api/users/", {
-      id: req,
-    })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => {
-      return err;
-    });
-};
