@@ -100,9 +100,7 @@ class ArticleSQLManager():
     @staticmethod
     def last_id():
         cursor = connection.cursor()
-        query = """
-            SELECT LAST_INSERT_ID();
-        """
+        query = """SELECT LAST_INSERT_ID();"""
 
         cursor.execute(query)
         id = []
@@ -173,4 +171,175 @@ class ArticleSQLManager():
             c.eprint = row[8]
             objects.append(c)
 
+        return objects
+
+class AuthorSQLManager():
+
+    @staticmethod
+    def insert(a):
+        cursor = connection.cursor()
+        query = """
+            INSERT INTO authors (name, affiliation, citedby, attributes, page, email, interests, url_picture)
+            VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}');
+        """.format(
+            a.name, a.affiliation, a.citedby, a.attributes, a.page, a.email, a.interests, a.url_picture
+        )
+    
+        cursor.execute(query)
+
+    @staticmethod
+    def get(id):
+        cursor = connection.cursor()
+        query = """
+            SELECT id, name, affiliation, citedby, attributes, page, email, interests, url_picture
+            FROM authors
+            WHERE id={0};
+        """.format(
+            id
+        )
+
+        cursor.execute(query)
+        objects = []
+
+        from .models import AuthorSQL
+
+        for row in cursor.fetchall():
+            a = AuthorSQL()
+            a.id = row[0]
+            a.name = row[1]
+            a.affiliation = row[2]
+            a.citedby = row[3]
+            a.attributes = row[4]
+            a.page = row[5]
+            a.email = row[6]
+            a.interests = row[7]
+            a.url_picture = row[8]
+            objects.append(a)
+        
+        return None if len(objects) == 0 else objects[0]
+    
+    @staticmethod
+    def update(a):
+        cursor = connection.cursor()
+        query = """
+            UPDATE authors SET name='{0}', affiliation='{1}', citedby='{2}', attributes='{3}',
+                page='{4}', email='{5}', interests='{6}', url_picture='{7}'
+            WHERE id={8};
+        """.format(
+            a.name, a.affiliation, a.citedby, a.attributes,
+                a.page, a.email, a.interests, a.url_picture,
+            a.id
+        )
+
+        cursor.execute(query)
+
+    @staticmethod
+    def delete(a):
+        cursor = connection.cursor()
+        query = """DELETE FROM authors WHERE id = {0};""".format(a.id)
+
+        cursor.execute(query)
+    
+    @staticmethod
+    def all():
+        cursor = connection.cursor()
+        query = """
+            SELECT id, name, affiliation, citedby, attributes, page, email, interests, url_picture
+            FROM authors
+            LIMIT 10;
+        """
+
+        cursor.execute(query)
+        objects = []
+
+        from .models import AuthorSQL
+
+        for row in cursor.fetchall():
+            a = AuthorSQL()
+            a.id = row[0]
+            a.name = row[1]
+            a.affiliation = row[2]
+            a.citedby = row[3]
+            a.attributes = row[4]
+            a.page = row[5]
+            a.email = row[6]
+            a.interests = row[7]
+            a.url_picture = row[8]
+            objects.append(a)
+        
+        return objects
+    
+    @staticmethod
+    def last_id():
+        cursor = connection.cursor()
+        query = """SELECT LAST_INSERT_ID();"""
+
+        cursor.execute(query)
+        id = []
+
+        for row in cursor.fetchall():
+            id.append(row[0])
+
+        return id[0]
+    
+    @staticmethod
+    def search_affiliation(search_term):
+        cursor = connection.cursor()
+        query = """
+            SELECT id, name, affiliation, citedby, attributes, page, email, interests, url_picture
+            FROM authors
+            WHERE affiliation LIKE '%{0}%';
+        """.format(
+            search_term
+        )
+
+        cursor.execute(query)
+        objects = []
+
+        from .models import AuthorSQL
+
+        for row in cursor.fetchall():
+            a = AuthorSQL()
+            a.id = row[0]
+            a.name = row[1]
+            a.affiliation = row[2]
+            a.citedby = row[3]
+            a.attributes = row[4]
+            a.page = row[5]
+            a.email = row[6]
+            a.interests = row[7]
+            a.url_picture = row[8]
+            objects.append(a)
+        
+        return objects
+    
+    @staticmethod
+    def search_name(search_term):
+        cursor = connection.cursor()
+        query = """
+            SELECT id, name, affiliation, citedby, attributes, page, email, interests, url_picture
+            FROM authors
+            WHERE name LIKE '%{0}%';
+        """.format(
+            search_term
+        )
+
+        cursor.execute(query)
+        objects = []
+
+        from .models import AuthorSQL
+
+        for row in cursor.fetchall():
+            a = AuthorSQL()
+            a.id = row[0]
+            a.name = row[1]
+            a.affiliation = row[2]
+            a.citedby = row[3]
+            a.attributes = row[4]
+            a.page = row[5]
+            a.email = row[6]
+            a.interests = row[7]
+            a.url_picture = row[8]
+            objects.append(a)
+        
         return objects

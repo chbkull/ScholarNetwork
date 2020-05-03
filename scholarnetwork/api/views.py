@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Article, Author, User, ArticleSQL
-from .serializers import ArticleSerializer, AuthorSerializer, UserSerializer, ArticleSQLSerializer
+from .models import Article, Author, User, ArticleSQL, AuthorSQL
+from .serializers import ArticleSerializer, AuthorSerializer, UserSerializer, ArticleSQLSerializer, AuthorSQLSerializer
 from rest_framework import generics
 
 # pylint: disable=no-member
@@ -255,6 +255,76 @@ def ArticleSQLSearchAuthorJson(request, format=None):
         if 'search_term' in request.data:
             articles = ArticleSQL.objects.search_author(request.data['search_term'])
             serializer = ArticleSQLSerializer(articles, many=True)
+            return Response(serializer.data)
+        else:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST'])
+def AuthorSQLList(request, format=None):
+    if request.method == 'GET':
+        authors = AuthorSQL.objects.all()
+        serializer = AuthorSQLSerializer(authors, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = AuthorSQLSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def AuthorSQLDetail(request, id, format=None):
+    author = AuthorSQL.objects.get(id)
+    if author is None:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        serializer = AuthorSQLSerializer(author)
+        return Response(serializer.data)
+    
+    elif request.method == 'PUT':
+        serializer = AuthorSQLSerializer(author, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'DELETE':
+        author.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def AuthorSQLSearchAffiliation(request, search_term, format=None):
+    if request.method == 'GET':
+        authors = AuthorSQL.objects.search_affiliation(search_term)
+        serializer = AuthorSQLSerializer(authors, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def AuthorSQLSearchAffiliationJson(request, format=None):
+    if request.method == 'GET':
+        if 'search_term' in request.data:
+            authors = AuthorSQL.objects.search_affiliation(request.data['search_term'])
+            serializer = AuthorSQLSerializer(authors, many=True)
+            return Response(serializer.data)
+        else:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def AuthorSQLSearchName(request, search_term, format=None):
+    if request.method == 'GET':
+        authors = AuthorSQL.objects.search_name(search_term)
+        serializer = AuthorSQLSerializer(authors, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def AuthorSQLSearchNameJson(request, format=None):
+    if request.method == 'GET':
+        if 'search_term' in request.data:
+            authors = AuthorSQL.objects.search_name(request.data['search_term'])
+            serializer = AuthorSQLSerializer(authors, many=True)
             return Response(serializer.data)
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)

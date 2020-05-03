@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Article, Author, User, ArticleSQL
+from .models import Article, Author, User, ArticleSQL, AuthorSQL
 
 # pylint: disable=no-member
 
@@ -79,6 +79,43 @@ class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
         fields = ('id', 'name', 'affiliation', 'citedby', 'attributes', 'page', 'email', 'interests', 'url_picture')
+
+class AuthorSQLSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(required=True, max_length=1024)
+    affiliation = serializers.CharField(required=True, max_length=1024)
+    citedby = serializers.CharField(required=True, max_length=1024) # TODO: change to int field
+    attributes = serializers.CharField(required=True, max_length=1024)
+    page = serializers.CharField(required=True, max_length=1024)
+    email = serializers.CharField(required=True, max_length=1024)
+    interests = serializers.CharField(required=True, max_length=1024)
+    url_picture = serializers.CharField(required=True, max_length=1024)
+
+    def create(self, validated_data):
+        a = AuthorSQL()
+        a.name = validated_data.get("name")
+        a.affiliation = validated_data.get("affiliation")
+        a.citedby = validated_data.get("citedby")
+        a.attributes = validated_data.get("attributes")
+        a.page = validated_data.get("page")
+        a.email = validated_data.get("email")
+        a.interests = validated_data.get("interests")
+        a.url_picture = validated_data.get("url_picture")
+        a.save()
+        a.id = AuthorSQL.objects.last_id()
+        return a
+    
+    def update(self, a, validated_data):
+        a.name = validated_data.get("name", a.name)
+        a.affiliation = validated_data.get("affiliation", a.affiliation)
+        a.citedby = validated_data.get("citedby", a.citedby)
+        a.attributes = validated_data.get("attributes", a.attributes)
+        a.page = validated_data.get("page", a.page)
+        a.email = validated_data.get("email", a.email)
+        a.interests = validated_data.get("interests", a.interests)
+        a.url_picture = validated_data.get("url_picture", a.url_picture)
+        a.save()
+        return a
 
 class UserSerializer(serializers.ModelSerializer):
     
