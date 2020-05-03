@@ -1,25 +1,27 @@
 // TODO
 
 import React, { Component, Fragment } from "react";
-import PropTypes from "prop-types";
+import {PropTypes} from "prop-types";
 import { Link, Redirect } from "react-router-dom";
-import axios from "axios";
-
+import {insertUser, getUserByEmail} from "../action/user";
+import 'regenerator-runtime/runtime';
+// import { async } from "regenerator-runtime/runtime";
 // import getUserByEmail from "../action/user";
 
 export class Login extends Component {
   // Don't call this.setState() here!
 
-  //   static propTypes = {
-  //     getUserByEmail: PropTypes.function.isRequired,
-  //   };
+
 
   state = {
     email: "",
     password: "",
     message: "",
     status: "",
+    tmp:""
   };
+
+
 
   // form on change
   onChange = (e) => {
@@ -28,34 +30,63 @@ export class Login extends Component {
     });
   };
 
-  onSubmit = (event) => {
+  onSubmit = async (event) => {
     event.preventDefault();
+    const target = event.target.value;
+    // var msg = "";
+    // var s = "";
 
-    axios
-      .get("api/users/searchemail/" + this.state.email)
-      .then((data) => {
-        var msg = "";
-        var s = "";
-        if (!data) {
+    var msg = "";
+    var s = "";
+    var req = this.state;
+    var res = { data:[], msg:"" };
+    if (req.email === '' || req.password===''){
+      s = "fail";
+      msg = "email and password are required";
+    }
+    else {
+      await getUserByEmail(req,res);
+      if (target === "signin"){
+        if (res.data.length === 0) {
           s = "fail";
           msg = "user not exist";
-        } else if (data.password !== this.state.password) {
+        } else if (res.data[0].password !== req.password) {
           s = "fail";
           msg = "password not match";
         } else {
           s = "succeed";
           msg = "log in successfully";
-          this.props.setUser(this.state.email, this.state.password, true);
+          this.props.setUser(res.data[0].id);
         }
-        this.setState({ email: "", password: "", status: s, message: msg }, () => {
-          console.log(this.state);
-        });
-      })
-      .catch((err) => {
-        this.setState({ email: "", password: "", status: "fail", message: "invalid input" }, () => {
-          console.log(this.state);
-        });
-      });
+      }
+      else{
+        // var inset_res = { data:[], msg:"" };
+        if (res.data.length !== 0) {
+          s = "fail";
+          msg = "user already exist";
+        }
+        else {
+          await insertUser(req,res);
+          console.log("res.msg:",res.msg);
+          if (res.data.length !== 0) {
+            this.props.setUser(res.data[0].id);
+            s = "succeed";
+            msg = "sign up successfully";
+          }
+          else {
+            s = "fail";
+            msg = "server error";
+          }
+
+        }
+      }
+
+    }
+
+    this.setState({ status: s, message: msg }, () => {
+      console.log(this.state);
+    });
+
   };
 
   onClick = () => {
@@ -68,35 +99,28 @@ export class Login extends Component {
     const message = this.state.message;
     const status = this.state.status;
 
+
+    var modular = <Fragment></Fragment>;
+
     if (status === "succeed") {
       console.log("status");
-      return <Redirect to="user/profile" />;
+      // TODO: redirect to showcase
+      return <Redirect to="/showcase" />;
     }
 
-    if (status === "new") {
-      return <Redirect to="user/register" />;
+    if (status === "fail"){
+      modular = (<div className="alert alert-dismissible alert-warning">
+      <button type="button" className="close" data-dismiss="alert" onClick = {this.onClick}>
+        &times;
+      </button>
+      <h4 className="alert-heading">Operation Failed</h4>
+      <p className="mb-0">Reason : {message}</p>
+    </div>);
     }
 
-    const modular = () => {
-      if (status === "fail") {
-        return (
-          <div className="alert alert-dismissible alert-warning">
-            <button type="button" className="close" data-dismiss="alert">
-              &times;
-            </button>
-            <h4 className="alert-heading">Log In Failed</h4>
-            <p className="mb-0">Reason : {message}</p>
-          </div>
-        );
-      }
-
-      return <div>fdahfkjdas</div>;
-    };
-
-    // console.log(success);
     return (
       <div className="card card-body mt-4 mb-4">
-        <h2>user log in</h2>
+        <h2>Log In</h2>
         <div>{modular}</div>
         <form>
           <div className="form-group">
@@ -120,12 +144,12 @@ export class Login extends Component {
             />
           </div>
           <div className="form-group">
-            <button type="submit" className="btn btn-primary" onClick={this.onSubmit}>
+            <button type="submit" className="btn btn-primary" value="signin" onClick={this.onSubmit}>
               Sign In
             </button>
           </div>
           <div className="form-group">
-            <button type="click" className="btn btn-primary" onClick={this.onClick}>
+            <button type="click" className="btn btn-primary" value="signup" onClick={this.onSubmit}>
               Sign Up
             </button>
           </div>
@@ -134,5 +158,11 @@ export class Login extends Component {
     );
   }
 }
+
+
+// Login.propTypes = {
+//   insertUser: PropTypes.function.isRequired,
+//   getUserByEmail: PropTypes.function.isRequired,
+// };
 
 export default Login;

@@ -136,25 +136,26 @@ The actual file structure is mostly wrapped up inside of the `ScholarNet/scholar
 
 ## Frontend Setup
 
-1. In 'scholarnetwork' folder (ls -> see scholarnetwork folder and frontend folder)
-
+1. In 'scholarnetwork' folder (ls -> see scholarnetwork folder and cannot see frontend folder)  // update
 ```
 npm init -y
 ```
 
-2. package intall
+2. package intall // update
 
 ```
-npm i axios prop-types react react-alert react-alert-template-basic react-dom react-router-dom react-transition-group @babel/core @babel/preset-env @babel/preset-react babel-eslint babel-loader babel-plugin-transform-class-properties eslint eslint-config-airbnb eslint-config-prettier eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react husky prettier pretty-quick webpack webpack-cli
+npm install @babel/core @babel/preset-env @babel/preset-react @babel/runtime axios babel-eslint babel-loader babel-plugin-transform-async-to-generator babel-plugin-transform-class-properties eslint eslint-config-airbnb eslint-config-prettier eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react husky prettier pretty-quick prop-types react react-dom react-router-dom react-transition-group semantic-ui-css semantic-ui-react webpack webpack-cli
+
 ```
 
 3. build and run 
 
-```python
+On first terminal:
 python manage.py makemigrations
 python manage.py migrate
-npm run build
-python manage.py runserver 
-```
+python manage.py runserver
 
- Then go to browser, by default http://127.0.0.1:8000/
+On second terminal:
+npm run dev 
+
+4. Then go to browser, by default http://127.0.0.1:8000/
