@@ -233,8 +233,28 @@ def ArticleSQLSearchTitle(request, search_term, format=None):
         return Response(serializer.data)
 
 @api_view(['GET'])
+def ArticleSQLSearchTitleJson(request, format=None):
+    if request.method == 'GET':
+        if 'search_term' in request.data:
+            articles = ArticleSQL.objects.search_title(request.data['search_term'])
+            serializer = ArticleSQLSerializer(articles, many=True)
+            return Response(serializer.data)
+        else:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
 def ArticleSQLSearchAuthor(request, search_term, format=None):
     if request.method == 'GET':
         articles = ArticleSQL.objects.search_author(search_term)
         serializer = ArticleSQLSerializer(articles, many=True)
         return Response(serializer.data)
+
+@api_view(['GET'])
+def ArticleSQLSearchAuthorJson(request, format=None):
+    if request.method == 'GET':
+        if 'search_term' in request.data:
+            articles = ArticleSQL.objects.search_author(request.data['search_term'])
+            serializer = ArticleSQLSerializer(articles, many=True)
+            return Response(serializer.data)
+        else:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)

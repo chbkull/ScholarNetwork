@@ -18,7 +18,9 @@ urlpatterns = [
     path('api/articlessql/', views.ArticleSQLList),
     path('api/articlessqldetail/<int:id>', views.ArticleSQLDetail),
     path('api/articlessql/searchtitle/<slug:search_term>', views.ArticleSQLSearchTitle),
-    path('api/articlessql/searchauthor/<slug:search_term>', views.ArticleSQLSearchAuthor)
+    path('api/articlessql/searchtitle/', views.ArticleSQLSearchTitleJson),
+    path('api/articlessql/searchauthor/<slug:search_term>', views.ArticleSQLSearchAuthor),
+    path('api/articlessql/searchauthor/', views.ArticleSQLSearchAuthorJson)
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
