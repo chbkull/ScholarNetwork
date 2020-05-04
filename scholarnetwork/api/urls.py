@@ -34,7 +34,11 @@ urlpatterns = [
     path('api/userssql/searchaffiliation/<slug:search_term>', views.UserSQLSearchAffiliation),
     path('api/userssql/searchaffiliation/', views.UserSQLSearchAffiliationJson),
     path('api/userssql/searchemail/<slug:search_term>', views.UserSQLSearchEmail),
-    path('api/userssql/searchemail/', views.UserSQLSearchEmailJson)
+    path('api/userssql/searchemail/', views.UserSQLSearchEmailJson),
+    path('api/publisherssql/', views.PublisherSQLList),
+    path('api/publisherssqldetail/<int:id>', views.PublisherSQLDetail),
+    path('api/publisherssql/searchname/<slug:search_term>', views.PublisherSQLSearchName),
+    path('api/publisherssql/searchname/', views.PublisherSQLSearchNameJson),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

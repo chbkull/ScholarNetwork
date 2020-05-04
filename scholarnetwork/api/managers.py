@@ -500,3 +500,122 @@ class UserSQLManager():
             objects.append(u)
         
         return objects
+
+class PublisherSQLManager():
+
+    @staticmethod
+    def insert(p):
+        cursor = connection.cursor()
+        query = """
+            INSERT INTO publishers (name)
+            VALUES ('{0}');
+        """.format(
+            p.name
+        )
+
+        cursor.execute(query)
+    
+    @staticmethod
+    def get(id):
+        cursor = connection.cursor()
+        query = """
+            SELECT id, name
+            FROM publishers
+            WHERE id={0};
+        """.format(
+            id
+        )
+
+        cursor.execute(query)
+        objects = []
+
+        from .models import PublisherSQL
+
+        for row in cursor.fetchall():
+            p = PublisherSQL()
+            p.id = row[0]
+            p.name = row[1]
+            objects.append(p)
+        
+        return None if len(objects) == 0 else objects[0]
+    
+    @staticmethod
+    def update(p):
+        cursor = connection.cursor()
+        query = """
+            UPDATE publishers SET name='{0}'
+            WHERE id={1};
+        """.format(
+            p.name,
+            p.id
+        )
+
+        cursor.execute(query)
+    
+    @staticmethod
+    def delete(p):
+        cursor = connection.cursor()
+        query = """DELETE FROM publishers WHERE id = {0};""".format(p.id)
+
+        cursor.execute(query)
+    
+    @staticmethod
+    def all():
+        cursor = connection.cursor()
+        query = """
+            SELECT id, name
+            FROM publishers
+            LIMIT 10;
+        """.format(
+            id
+        )
+
+        cursor.execute(query)
+        objects = []
+
+        from .models import PublisherSQL
+
+        for row in cursor.fetchall():
+            p = PublisherSQL()
+            p.id = row[0]
+            p.name = row[1]
+            objects.append(p)
+        
+        return objects
+    
+    @staticmethod
+    def last_id():
+        cursor = connection.cursor()
+        query = """SELECT LAST_INSERT_ID();"""
+
+        cursor.execute(query)
+        id = []
+
+        for row in cursor.fetchall():
+            id.append(row[0])
+        
+        return id[0]
+    
+    @staticmethod
+    def search_name(search_term):
+        cursor = connection.cursor()
+        query = """
+            SELECT id, name
+            FROM publishers
+            WHERE name LIKE '%{0}%';
+        """.format(
+            search_term
+        )
+
+        cursor.execute(query)
+        objects = []
+
+        from .models import PublisherSQL
+
+        for row in cursor.fetchall():
+            p = PublisherSQL()
+            p.id = row[0]
+            p.name = row[1]
+            objects.append(p)
+        
+        return objects

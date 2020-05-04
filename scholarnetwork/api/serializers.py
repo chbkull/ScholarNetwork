@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Article, Author, User, ArticleSQL, AuthorSQL, UserSQL
+from .models import Article, Author, User, ArticleSQL, AuthorSQL, UserSQL, PublisherSQL
 
 # pylint: disable=no-member
 
@@ -154,10 +154,26 @@ class UserSQLSerializer(serializers.Serializer):
         return u
     
     def update(self, u, validated_data):
-        u.email = validated_data.get("email")
-        u.password = validated_data.get("password")
-        u.affiliation = validated_data.get("affiliation")
-        u.history = validated_data.get("history")
-        u.interests = validated_data.get("interests")
+        u.email = validated_data.get("email", u.email)
+        u.password = validated_data.get("password", u.password)
+        u.affiliation = validated_data.get("affiliation", u.affiliation)
+        u.history = validated_data.get("history", u.history)
+        u.interests = validated_data.get("interests", u.interests)
         u.save()
         return u
+
+class PublisherSQLSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(required=True, max_length=512) #TODO: change to TEXT, currently VARCHAR(512)
+
+    def create(self, validated_data):
+        p = PublisherSQL()
+        p.name = validated_data.get("name")
+        p.save()
+        p.id = PublisherSQL.objects.last_id()
+        return p
+    
+    def update(self, p, validated_data):
+        p.name = validated_data.get("name", p.name)
+        p.save()
+        return p
