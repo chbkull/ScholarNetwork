@@ -1,5 +1,5 @@
 from django.db import models
-from .managers import ArticleSQLManager, AuthorSQLManager
+from .managers import ArticleSQLManager, AuthorSQLManager, UserSQLManager
 
 class Article(models.Model):
     id = models.AutoField(primary_key=True)
@@ -87,3 +87,23 @@ class User(models.Model):
 
     class Meta:
         db_table = 'users'
+
+class UserSQL():
+    objects = UserSQLManager()
+
+    def __init__(self):
+        self.id = None
+        self.email = None
+        self.password = None
+        self.affiliation = None
+        self.history = None
+        self.interests = None
+
+    def save(self):
+        if self.id is not None:
+            self.objects.update(self)
+        else:
+            self.objects.insert(self)
+    
+    def delete(self):
+        self.objects.delete(self)

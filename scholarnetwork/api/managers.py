@@ -343,3 +343,160 @@ class AuthorSQLManager():
             objects.append(a)
         
         return objects
+
+class UserSQLManager():
+    
+    @staticmethod
+    def insert(u):
+        cursor = connection.cursor()
+        query = """
+            INSERT INTO users (email, password, affiliation, history, interests)
+            VALUES ('{0}', '{1}', '{2}', '{3}', '{4}');
+        """.format(
+            u.email, u.password, u.affiliation, u.history, u.interests
+        )
+
+        cursor.execute(query)
+    
+    @staticmethod
+    def get(id):
+        cursor = connection.cursor()
+        query = """
+            SELECT id, email, password, affiliation, history, interests
+            FROM users
+            WHERE id={0};
+        """.format(
+            id
+        )
+
+        cursor.execute(query)
+        objects = []
+
+        from .models import UserSQL
+
+        for row in cursor.fetchall():
+            u = UserSQL()
+            u.id = row[0]
+            u.email = row[1]
+            u.password = row[2]
+            u.affiliation = row[3]
+            u.history = row[4]
+            u.interests = row[5]
+            objects.append(u)
+        
+        return None if len(objects) == 0 else objects[0]
+    
+    @staticmethod
+    def update(u):
+        cursor = connection.cursor()
+        query = """
+            UPDATE users SET email='{0}', password='{1}', affiliation='{2}', history='{3}', interests='{4}'
+            WHERE id={5};
+        """.format(
+            u.email, u.password, u.affiliation, u.history, u.interests,
+            u.id
+        )
+
+        cursor.execute(query)
+    
+    @staticmethod
+    def delete(u):
+        cursor = connection.cursor()
+        query = """DELETE FROM users WHERE id = {0};""".format(u.id)
+
+        cursor.execute(query)
+    
+    @staticmethod
+    def all():
+        cursor = connection.cursor()
+        query = """
+            SELECT id, email, password, affiliation, history, interests
+            FROM users
+            LIMIT 10;
+        """
+
+        cursor.execute(query)
+        objects = []
+
+        from .models import UserSQL
+
+        for row in cursor.fetchall():
+            u = UserSQL()
+            u.id = row[0]
+            u.email = row[1]
+            u.password = row[2]
+            u.affiliation = row[3]
+            u.history = row[4]
+            u.interests = row[5]
+            objects.append(u)
+        
+        return objects
+    
+    @staticmethod
+    def last_id():
+        cursor = connection.cursor()
+        query = """SELECT LAST_INSERT_ID();"""
+
+        cursor.execute(query)
+        id = []
+
+        for row in cursor.fetchall():
+            id.append(row[0])
+        
+        return id[0]
+    
+    @staticmethod
+    def search_affiliation(search_term):
+        cursor = connection.cursor()
+        query = """
+            SELECT id, email, password, affiliation, history, interests
+            FROM users
+            WHERE affiliation LIKE '%{0}%';
+        """.format(
+            search_term
+        )
+
+        cursor.execute(query)
+        objects = []
+
+        from .models import UserSQL
+
+        for row in cursor.fetchall():
+            u = UserSQL()
+            u.id = row[0]
+            u.email = row[1]
+            u.password = row[2]
+            u.affiliation = row[3]
+            u.history = row[4]
+            u.interests = row[5]
+            objects.append(u)
+        
+        return objects
+    
+    @staticmethod
+    def search_email(search_term):
+        cursor = connection.cursor()
+        query = """
+            SELECT id, email, password, affiliation, history, interests
+            FROM users
+            WHERE email LIKE '%{0}%';
+        """.format(
+            search_term
+        )
+
+        cursor.execute(query)
+        objects = []
+
+        from .models import UserSQL
+
+        for row in cursor.fetchall():
+            u = UserSQL()
+            u.id = row[0]
+            u.email = row[1]
+            u.password = row[2]
+            u.affiliation = row[3]
+            u.history = row[4]
+            u.interests = row[5]
+            objects.append(u)
+        
+        return objects
