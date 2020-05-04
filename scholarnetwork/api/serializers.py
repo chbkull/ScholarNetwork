@@ -84,9 +84,14 @@ class AuthorSQLSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(required=True, max_length=1024)
     affiliation = serializers.CharField(required=True, max_length=1024)
-    citedby = serializers.CharField(required=True, max_length=1024) # TODO: change to int field
-    attributes = serializers.CharField(required=True, max_length=1024)
-    page = serializers.CharField(required=True, max_length=1024)
+    citedby = serializers.IntegerField(required=True)
+    citedby_5 = serializers.IntegerField(required=True)
+    h_index = serializers.IntegerField(required=True)
+    h_index_5 = serializers.IntegerField(required=True)
+    i10_index = serializers.IntegerField(required=True)
+    i10_index_5 = serializers.IntegerField(required=True)
+    citedby_history = serializers.CharField(required=True, max_length=1024)
+    page = serializers.IntegerField(required=True)
     email = serializers.CharField(required=True, max_length=1024)
     interests = serializers.CharField(required=True, max_length=1024)
     url_picture = serializers.CharField(required=True, max_length=1024)
@@ -96,7 +101,12 @@ class AuthorSQLSerializer(serializers.Serializer):
         a.name = validated_data.get("name")
         a.affiliation = validated_data.get("affiliation")
         a.citedby = validated_data.get("citedby")
-        a.attributes = validated_data.get("attributes")
+        a.citedby_5 = validated_data.get("citedby_5")
+        a.h_index = validated_data.get("h_index")
+        a.h_index_5 = validated_data.get("h_index_5")
+        a.i10_index = validated_data.get("i10_index")
+        a.i10_index_5 = validated_data.get("i10_index_5")
+        a.citedby_history = validated_data.get("citedby_history")
         a.page = validated_data.get("page")
         a.email = validated_data.get("email")
         a.interests = validated_data.get("interests")
@@ -109,7 +119,12 @@ class AuthorSQLSerializer(serializers.Serializer):
         a.name = validated_data.get("name", a.name)
         a.affiliation = validated_data.get("affiliation", a.affiliation)
         a.citedby = validated_data.get("citedby", a.citedby)
-        a.attributes = validated_data.get("attributes", a.attributes)
+        a.citedby_5 = validated_data.get("citedby_5", a.citedby_5)
+        a.h_index = validated_data.get("h_index", a.h_index)
+        a.h_index_5 = validated_data.get("h_index_5", a.h_index_5)
+        a.i10_index = validated_data.get("i10_index", a.i10_index)
+        a.i10_index_5 = validated_data.get("i10_index_5", a.i10_index_5)
+        a.citedby_history = validated_data.get("citedby_history", a.citedby_history)
         a.page = validated_data.get("page", a.page)
         a.email = validated_data.get("email", a.email)
         a.interests = validated_data.get("interests", a.interests)
@@ -164,7 +179,7 @@ class UserSQLSerializer(serializers.Serializer):
 
 class PublisherSQLSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(required=True, max_length=512) #TODO: change to TEXT, currently VARCHAR(512)
+    name = serializers.CharField(required=True, max_length=1024)
 
     def create(self, validated_data):
         p = PublisherSQL()
@@ -180,7 +195,7 @@ class PublisherSQLSerializer(serializers.Serializer):
 
 class JournalSQLSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(required=True, max_length=300) #TODO: change to TEXT, currently VARCHAR(300)
+    name = serializers.CharField(required=True, max_length=1024)
 
     def create(self, validated_data):
         j = JournalSQL()

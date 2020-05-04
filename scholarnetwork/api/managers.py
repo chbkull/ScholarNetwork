@@ -179,10 +179,10 @@ class AuthorSQLManager():
     def insert(a):
         cursor = connection.cursor()
         query = """
-            INSERT INTO authors (name, affiliation, citedby, attributes, page, email, interests, url_picture)
-            VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}');
+            INSERT INTO authors (name, affiliation, citedby, citedby_5, h_index, h_index_5, i10_index, i10_index_5, citedby_history, page, email, interests, url_picture)
+            VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}',);
         """.format(
-            a.name, a.affiliation, a.citedby, a.attributes, a.page, a.email, a.interests, a.url_picture
+            a.name, a.affiliation, a.citedby, a.citedby_5. a.h_index, a.h_index_5, a.i10_index, a.i10_index_5, a.citedby_history, a.page, a.email, a.interests, a.url_picture
         )
     
         cursor.execute(query)
@@ -191,7 +191,7 @@ class AuthorSQLManager():
     def get(id):
         cursor = connection.cursor()
         query = """
-            SELECT id, name, affiliation, citedby, attributes, page, email, interests, url_picture
+            SELECT id, name, affiliation, citedby, citedby_5, h_index, h_index_5, i10_index, i10_index_5, citedby_history, page, email, interests, url_picture
             FROM authors
             WHERE id={0};
         """.format(
@@ -209,11 +209,16 @@ class AuthorSQLManager():
             a.name = row[1]
             a.affiliation = row[2]
             a.citedby = row[3]
-            a.attributes = row[4]
-            a.page = row[5]
-            a.email = row[6]
-            a.interests = row[7]
-            a.url_picture = row[8]
+            a.citedby_5 = row[4]
+            a.h_index = row[5]
+            a.h_index_5 = row[6]
+            a.i10_index = row[7]
+            a.i10_index_5 = row[8]
+            a.citedby_history = row[9]
+            a.page = row[10]
+            a.email = row[11]
+            a.interests = row[12]
+            a.url_picture = row[13]
             objects.append(a)
         
         return None if len(objects) == 0 else objects[0]
@@ -222,11 +227,13 @@ class AuthorSQLManager():
     def update(a):
         cursor = connection.cursor()
         query = """
-            UPDATE authors SET name='{0}', affiliation='{1}', citedby='{2}', attributes='{3}',
-                page='{4}', email='{5}', interests='{6}', url_picture='{7}'
-            WHERE id={8};
+            UPDATE authors SET name='{0}', affiliation='{1}', citedby='{2}', citedby_5='{3}',
+                h_index='{4}', h_index_5='{5}', i10_index='{6}', i10_index_5='{7}', citedby_history='{8}',
+                page='{9}', email='{10}', interests='{11}', url_picture='{12}'
+            WHERE id={13};
         """.format(
-            a.name, a.affiliation, a.citedby, a.attributes,
+            a.name, a.affiliation, a.citedby, a.citedby_5,
+                a.h_index, a.h_index_5, a.i10_index, a.i10_index_5, a.citedby_history,
                 a.page, a.email, a.interests, a.url_picture,
             a.id
         )
@@ -244,7 +251,7 @@ class AuthorSQLManager():
     def all():
         cursor = connection.cursor()
         query = """
-            SELECT id, name, affiliation, citedby, attributes, page, email, interests, url_picture
+            SELECT id, name, affiliation, citedby, citedby_5, h_index, h_index_5, i10_index, i10_index_5, citedby_history, page, email, interests, url_picture
             FROM authors
             LIMIT 10;
         """
@@ -260,11 +267,16 @@ class AuthorSQLManager():
             a.name = row[1]
             a.affiliation = row[2]
             a.citedby = row[3]
-            a.attributes = row[4]
-            a.page = row[5]
-            a.email = row[6]
-            a.interests = row[7]
-            a.url_picture = row[8]
+            a.citedby_5 = row[4]
+            a.h_index = row[5]
+            a.h_index_5 = row[6]
+            a.i10_index = row[7]
+            a.i10_index_5 = row[8]
+            a.citedby_history = row[9]
+            a.page = row[10]
+            a.email = row[11]
+            a.interests = row[12]
+            a.url_picture = row[13]
             objects.append(a)
         
         return objects
@@ -286,7 +298,7 @@ class AuthorSQLManager():
     def search_affiliation(search_term):
         cursor = connection.cursor()
         query = """
-            SELECT id, name, affiliation, citedby, attributes, page, email, interests, url_picture
+            SELECT id, name, affiliation, citedby, citedby_5, h_index, h_index_5, i10_index, i10_index_5, citedby_history, page, email, interests, url_picture
             FROM authors
             WHERE affiliation LIKE '%{0}%';
         """.format(
@@ -304,11 +316,16 @@ class AuthorSQLManager():
             a.name = row[1]
             a.affiliation = row[2]
             a.citedby = row[3]
-            a.attributes = row[4]
-            a.page = row[5]
-            a.email = row[6]
-            a.interests = row[7]
-            a.url_picture = row[8]
+            a.citedby_5 = row[4]
+            a.h_index = row[5]
+            a.h_index_5 = row[6]
+            a.i10_index = row[7]
+            a.i10_index_5 = row[8]
+            a.citedby_history = row[9]
+            a.page = row[10]
+            a.email = row[11]
+            a.interests = row[12]
+            a.url_picture = row[13]
             objects.append(a)
         
         return objects
@@ -317,7 +334,7 @@ class AuthorSQLManager():
     def search_name(search_term):
         cursor = connection.cursor()
         query = """
-            SELECT id, name, affiliation, citedby, attributes, page, email, interests, url_picture
+            SELECT id, name, affiliation, citedby, citedby_5, h_index, h_index_5, i10_index, i10_index_5, citedby_history, page, email, interests, url_picture
             FROM authors
             WHERE name LIKE '%{0}%';
         """.format(
@@ -335,11 +352,16 @@ class AuthorSQLManager():
             a.name = row[1]
             a.affiliation = row[2]
             a.citedby = row[3]
-            a.attributes = row[4]
-            a.page = row[5]
-            a.email = row[6]
-            a.interests = row[7]
-            a.url_picture = row[8]
+            a.citedby_5 = row[4]
+            a.h_index = row[5]
+            a.h_index_5 = row[6]
+            a.i10_index = row[7]
+            a.i10_index_5 = row[8]
+            a.citedby_history = row[9]
+            a.page = row[10]
+            a.email = row[11]
+            a.interests = row[12]
+            a.url_picture = row[13]
             objects.append(a)
         
         return objects
