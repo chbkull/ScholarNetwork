@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Article, Author, User, ArticleSQL, AuthorSQL, UserSQL, PublisherSQL
-from .serializers import ArticleSerializer, AuthorSerializer, UserSerializer, ArticleSQLSerializer, AuthorSQLSerializer, UserSQLSerializer, PublisherSQLSerializer
+from .models import Article, Author, User, ArticleSQL, AuthorSQL, UserSQL, PublisherSQL, JournalSQL
+from .serializers import ArticleSerializer, AuthorSerializer, UserSerializer, ArticleSQLSerializer, AuthorSQLSerializer, UserSQLSerializer, PublisherSQLSerializer, JournalSQLSerializer
 from rest_framework import generics
 
 # pylint: disable=no-member
@@ -448,6 +448,59 @@ def PublisherSQLSearchNameJson(request, format=None):
         if 'search_term' in request.data:
             publishers = PublisherSQL.objects.search_name(request.data['search_term'])
             serializer = PublisherSQLSerializer(publishers, many=True)
+            return Response(serializer.data)
+        else:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'POST'])
+def JournalSQLList(request, format=None):
+    if request.method == 'GET':
+        journals = JournalSQL.objects.all()
+        serializer = JournalSQLSerializer(journals, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = JournalSQLSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def JournalSQLDetail(request, id, format=None):
+    journal = JournalSQL.objects.get(id)
+    if journal is None:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        serializer = JournalSQLSerializer(journal)
+        return Response(serializer.data)
+    
+    elif request.method == 'PUT':
+        serializer = JournalSQLSerializer(journal, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == 'DELETE':
+        journal.delete()
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def JournalSQLSearchName(request, search_term, format=None):
+    if request.method == 'GET':
+        journals = JournalSQL.objects.search_name(search_term)
+        serializer = JournalSQLSerializer(journals, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def JournalSQLSearchNameJson(request, format=None):
+    if request.method == 'GET':
+        if 'search_term' in request.data:
+            journals = JournalSQL.objects.search_name(request.data['search_term'])
+            serializer = JournalSQLSerializer(journals, many=True)
             return Response(serializer.data)
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
