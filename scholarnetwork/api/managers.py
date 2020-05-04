@@ -44,7 +44,7 @@ class ArticleSQLManager():
             c.eprint = row[8]
             objects.append(c)
 
-        return None if len(objects) == 0 else objects[0]
+        return None if len(objects) == 0 else objects
 
     @staticmethod
     def update(c):
@@ -221,7 +221,7 @@ class AuthorSQLManager():
             a.url_picture = row[13]
             objects.append(a)
         
-        return None if len(objects) == 0 else objects[0]
+        return None if len(objects) == 0 else objects
     
     @staticmethod
     def update(a):
@@ -406,7 +406,7 @@ class UserSQLManager():
             u.interests = row[5]
             objects.append(u)
         
-        return None if len(objects) == 0 else objects[0]
+        return None if len(objects) == 0 else objects
     
     @staticmethod
     def update(u):
@@ -559,7 +559,7 @@ class PublisherSQLManager():
             p.name = row[1]
             objects.append(p)
         
-        return None if len(objects) == 0 else objects[0]
+        return None if len(objects) == 0 else objects
     
     @staticmethod
     def update(p):
@@ -678,7 +678,7 @@ class JournalSQLManager():
             j.name = row[1]
             objects.append(j)
         
-        return None if len(objects) == 0 else objects[0]
+        return None if len(objects) == 0 else objects
     
     @staticmethod
     def update(j):

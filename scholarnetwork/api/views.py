@@ -211,7 +211,7 @@ def ArticleSQLDetail(request, id, format=None):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
-        serializer = ArticleSQLSerializer(article)
+        serializer = ArticleSQLSerializer(article, many=True)
         return Response(serializer.data)
     
     elif request.method == 'PUT':
@@ -281,7 +281,7 @@ def AuthorSQLDetail(request, id, format=None):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
-        serializer = AuthorSQLSerializer(author)
+        serializer = AuthorSQLSerializer(author, many=True)
         return Response(serializer.data)
     
     elif request.method == 'PUT':
@@ -351,7 +351,7 @@ def UserSQLDetail(request, id, format=None):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
-        serializer = UserSQLSerializer(user)
+        serializer = UserSQLSerializer(user, many=True)
         return Response(serializer.data)
     
     elif request.method == 'PUT':
@@ -421,7 +421,7 @@ def PublisherSQLDetail(request, id, format=None):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
-        serializer = PublisherSQLSerializer(publisher)
+        serializer = PublisherSQLSerializer(publisher, many=True)
         return Response(serializer.data)
     
     elif request.method == 'PUT':
@@ -474,7 +474,7 @@ def JournalSQLDetail(request, id, format=None):
         return Response(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
-        serializer = JournalSQLSerializer(journal)
+        serializer = JournalSQLSerializer(journal, many=True)
         return Response(serializer.data)
     
     elif request.method == 'PUT':
