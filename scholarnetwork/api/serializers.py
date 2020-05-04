@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Article, Author, User, ArticleSQL, AuthorSQL
+from .models import Article, Author, User, ArticleSQL, AuthorSQL, UserSQL
 
 # pylint: disable=no-member
 
@@ -133,3 +133,31 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'email', 'password', 'affiliation', 'history', 'interests']
+
+class UserSQLSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    email = serializers.CharField(required=True, max_length=1024)
+    password = serializers.CharField(required=True, max_length=1024)
+    affiliation = serializers.CharField(required=True, max_length=1024)
+    history = serializers.CharField(required=True, max_length=1024)
+    interests = serializers.CharField(required=True, max_length=1024)
+
+    def create(self, validated_data):
+        u = UserSQL()
+        u.email = validated_data.get("email")
+        u.password = validated_data.get("password")
+        u.affiliation = validated_data.get("affiliation")
+        u.history = validated_data.get("history")
+        u.interests = validated_data.get("interests")
+        u.save()
+        u.id = UserSQL.objects.last_id()
+        return u
+    
+    def update(self, u, validated_data):
+        u.email = validated_data.get("email")
+        u.password = validated_data.get("password")
+        u.affiliation = validated_data.get("affiliation")
+        u.history = validated_data.get("history")
+        u.interests = validated_data.get("interests")
+        u.save()
+        return u

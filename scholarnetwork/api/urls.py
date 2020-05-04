@@ -9,8 +9,10 @@ urlpatterns = [
     path('api/articles/searchauthor/<slug:searchby>', views.ArticleSearchAuthor.as_view()),
     path('api/authors/', views.AuthorList.as_view()),
     path('api/authors/<int:pk>', views.AuthorDetail.as_view()),
-    path('api/authors/searchname/<slug:searchby>', views.AuthorSearchName.as_view()),
-    path('api/authors/searchaffiliation/<slug:searchby>', views.AuthorSearchAffiliation.as_view()),
+    # path('api/authors/searchname/<slug:searchby>', views.AuthorSearchName.as_view()),
+    path('api/authors/searchname/<slug:search_term>', views.AuthorSQLSearchName),
+    # path('api/authors/searchaffiliation/<slug:searchby>', views.AuthorSearchAffiliation.as_view()),
+    path('api/authors/searchaffiliation/<slug:search_term>', views.AuthorSQLSearchAffiliation),
     path('api/users/', views.UserList.as_view()),
     path('api/users/<int:pk>', views.UserDetail.as_view()),
     path('api/users/searchemail/<slug:searchby>', views.UserSearchEmail.as_view()),
@@ -26,7 +28,13 @@ urlpatterns = [
     path('api/authorssql/searchaffiliation/<slug:search_term>', views.AuthorSQLSearchAffiliation),
     path('api/authorssql/searchaffiliation/', views.AuthorSQLSearchAffiliationJson),
     path('api/authorssql/searchname/<slug:search_term>', views.AuthorSQLSearchName),
-    path('api/authorssql/searchname/', views.AuthorSQLSearchNameJson)
+    path('api/authorssql/searchname/', views.AuthorSQLSearchNameJson),
+    path('api/userssql/', views.UserSQLList),
+    path('api/userssqldetail/<int:id>', views.UserSQLDetail),
+    path('api/userssql/searchaffiliation/<slug:search_term>', views.UserSQLSearchAffiliation),
+    path('api/userssql/searchaffiliation/', views.UserSQLSearchAffiliationJson),
+    path('api/userssql/searchemail/<slug:search_term>', views.UserSQLSearchEmail),
+    path('api/userssql/searchemail/', views.UserSQLSearchEmailJson)
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
