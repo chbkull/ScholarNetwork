@@ -62,7 +62,12 @@ class AuthorSQL():
         self.name = None
         self.affiliation = None
         self.citedby = None
-        self.attributes = None
+        self.citedby_5 = None
+        self.h_index = None
+        self.h_index_5 = None
+        self.i10_index = None
+        self.i10_index_5 = None
+        self.citedby_history = None
         self.page = None
         self.email = None
         self.interests = None
