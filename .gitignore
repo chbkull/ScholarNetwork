@@ -9,3 +9,6 @@ env/
 
 # npm modules
 node_modules/
+
+# compiled frontend
+scholarnetwork/frontend/static/frontend/main.js
