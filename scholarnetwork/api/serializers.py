@@ -35,37 +35,38 @@ class ArticleSQLSerializer(serializers.Serializer):
     eprint = serializers.CharField(required=True, max_length=1024)
 
     def create(self, validated_data):
-        c = ArticleSQL()
-        c.name = validated_data.get("name")
-        c.affiliation = validated_data.get("affiliation")
-        c.citedby = validated_data.get("citedby")
-        c.pub_title = validated_data.get("pub_title")
-        c.pub_year = validated_data.get("pub_year")
-        c.citations = validated_data.get("citations")
-        c.pub_author = validated_data.get("pub_author")
-        c.eprint = validated_data.get("eprint")
-        c.save()
-        c.id = ArticleSQL.objects.last_id()
-        return c
+        a = ArticleSQL()
+        a.name = validated_data.get("name")
+        a.affiliation = validated_data.get("affiliation")
+        a.citedby = validated_data.get("citedby")
+        a.pub_title = validated_data.get("pub_title")
+        a.pub_year = validated_data.get("pub_year")
+        a.citations = validated_data.get("citations")
+        a.pub_author = validated_data.get("pub_author")
+        a.eprint = validated_data.get("eprint")
+        a.save()
+        a.id = ArticleSQL.objects.last_id()
+        return a
     
-    def update(self, c, validated_data):
-        c.name = validated_data.get("name", c.name)
-        c.affiliation = validated_data.get("affiliation", c.affiliation)
-        c.citedby = validated_data.get("citedby", c.citedby)
-        c.pub_title = validated_data.get("pub_title", c.pub_title)
-        c.pub_year = validated_data.get("pub_year", c.pub_year)
-        c.citations = validated_data.get("citations", c.citations)
-        c.pub_author = validated_data.get("pub_author", c.pub_author)
-        c.eprint = validated_data.get("eprint", c.eprint)
-        c.save()
-        return c
+    def update(self, a, validated_data):
+        a = a[0]
+        a.name = validated_data.get("name", a.name)
+        a.affiliation = validated_data.get("affiliation", a.affiliation)
+        a.citedby = validated_data.get("citedby", a.citedby)
+        a.pub_title = validated_data.get("pub_title", a.pub_title)
+        a.pub_year = validated_data.get("pub_year", a.pub_year)
+        a.citations = validated_data.get("citations", a.citations)
+        a.pub_author = validated_data.get("pub_author", a.pub_author)
+        a.eprint = validated_data.get("eprint", a.eprint)
+        a.save()
+        return a
 
 class AuthorSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         return Author.objects.create(**validated_data)
     
-    def update(self, instance, validated_data):
+    def update(self, a, validated_data):
         instance.name = validated_data.get('name', instance.name)
         instance.affiliation = validated_data.get('affiliation', instance.affiliation)
         instance.citedby = validated_data.get('citedby', instance.citedby)
@@ -116,6 +117,7 @@ class AuthorSQLSerializer(serializers.Serializer):
         return a
     
     def update(self, a, validated_data):
+        a = a[0]
         a.name = validated_data.get("name", a.name)
         a.affiliation = validated_data.get("affiliation", a.affiliation)
         a.citedby = validated_data.get("citedby", a.citedby)
@@ -169,6 +171,7 @@ class UserSQLSerializer(serializers.Serializer):
         return u
     
     def update(self, u, validated_data):
+        u = u[0]
         u.email = validated_data.get("email", u.email)
         u.password = validated_data.get("password", u.password)
         u.affiliation = validated_data.get("affiliation", u.affiliation)
@@ -189,6 +192,7 @@ class PublisherSQLSerializer(serializers.Serializer):
         return p
     
     def update(self, p, validated_data):
+        p = p[0]
         p.name = validated_data.get("name", p.name)
         p.save()
         return p
@@ -205,6 +209,7 @@ class JournalSQLSerializer(serializers.Serializer):
         return j
     
     def update(self, j, validated_data):
+        j = j[0]
         j.name = validated_data.get("name", j.name)
         j.save()
         return j

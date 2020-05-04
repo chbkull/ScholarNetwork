@@ -222,7 +222,7 @@ def ArticleSQLDetail(request, id, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     elif request.method == 'DELETE':
-        article.delete()
+        article[0].delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
@@ -292,7 +292,7 @@ def AuthorSQLDetail(request, id, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     elif request.method == 'DELETE':
-        author.delete()
+        author[0].delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
@@ -362,7 +362,7 @@ def UserSQLDetail(request, id, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     elif request.method == 'DELETE':
-        user.delete()
+        user[0].delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
@@ -432,7 +432,7 @@ def PublisherSQLDetail(request, id, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     elif request.method == 'DELETE':
-        publisher.delete()
+        publisher[0].delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
@@ -485,7 +485,7 @@ def JournalSQLDetail(request, id, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     elif request.method == 'DELETE':
-        journal.delete()
+        journal[0].delete()
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
