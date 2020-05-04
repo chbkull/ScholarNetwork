@@ -619,3 +619,122 @@ class PublisherSQLManager():
             objects.append(p)
         
         return objects
+
+class JournalSQLManager():
+
+    @staticmethod
+    def insert(j):
+        cursor = connection.cursor()
+        query = """
+            INSERT INTO journals (name)
+            VALUES ('{0}');
+        """.format(
+            j.name
+        )
+
+        cursor.execute(query)
+    
+    @staticmethod
+    def get(id):
+        cursor = connection.cursor()
+        query = """
+            SELECT id, name
+            FROM journals
+            WHERE id={0};
+        """.format(
+            id
+        )
+
+        cursor.execute(query)
+        objects = []
+
+        from .models import JournalSQL
+
+        for row in cursor.fetchall():
+            j = JournalSQL()
+            j.id = row[0]
+            j.name = row[1]
+            objects.append(j)
+        
+        return None if len(objects) == 0 else objects[0]
+    
+    @staticmethod
+    def update(j):
+        cursor = connection.cursor()
+        query = """
+            UPDATE journals SET name='{0}'
+            WHERE id={1};
+        """.format(
+            j.name,
+            j.id
+        )
+
+        cursor.execute(query)
+    
+    @staticmethod
+    def delete(j):
+        cursor = connection.cursor()
+        query = """DELETE FROM journals WHERE id = {0};""".format(j.id)
+
+        cursor.execute(query)
+    
+    @staticmethod
+    def all():
+        cursor = connection.cursor()
+        query = """
+            SELECT id, name
+            FROM journals
+            LIMIT 10;
+        """.format(
+            id
+        )
+
+        cursor.execute(query)
+        objects = []
+
+        from .models import JournalSQL
+
+        for row in cursor.fetchall():
+            j = JournalSQL()
+            j.id = row[0]
+            j.name = row[1]
+            objects.append(j)
+        
+        return objects
+    
+    @staticmethod
+    def last_id():
+        cursor = connection.cursor()
+        query = """SELECT LAST_INSERT_ID();"""
+
+        cursor.execute(query)
+        id = []
+
+        for row in cursor.fetchall():
+            id.append(row[0])
+        
+        return id[0]
+    
+    @staticmethod
+    def search_name(search_term):
+        cursor = connection.cursor()
+        query = """
+            SELECT id, name
+            FROM journals
+            WHERE name LIKE '%{0}%';
+        """.format(
+            search_term
+        )
+
+        cursor.execute(query)
+        objects = []
+
+        from .models import JournalSQL
+
+        for row in cursor.fetchall():
+            j = JournalSQL()
+            j.id = row[0]
+            j.name = row[1]
+            objects.append(j)
+        
+        return objects

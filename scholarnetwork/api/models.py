@@ -1,5 +1,5 @@
 from django.db import models
-from .managers import ArticleSQLManager, AuthorSQLManager, UserSQLManager, PublisherSQLManager
+from .managers import ArticleSQLManager, AuthorSQLManager, UserSQLManager, PublisherSQLManager, JournalSQLManager
 
 class Article(models.Model):
     id = models.AutoField(primary_key=True)
@@ -110,6 +110,22 @@ class UserSQL():
 
 class PublisherSQL():
     objects = PublisherSQLManager()
+
+    def __init__(self):
+        self.id = None
+        self.name = None
+    
+    def save(self):
+        if self.id is not None:
+            self.objects.update(self)
+        else:
+            self.objects.insert(self)
+    
+    def delete(self):
+        self.objects.delete(self)
+
+class JournalSQL():
+    objects = JournalSQLManager()
 
     def __init__(self):
         self.id = None

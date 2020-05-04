@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Article, Author, User, ArticleSQL, AuthorSQL, UserSQL, PublisherSQL
+from .models import Article, Author, User, ArticleSQL, AuthorSQL, UserSQL, PublisherSQL, JournalSQL
 
 # pylint: disable=no-member
 
@@ -177,3 +177,19 @@ class PublisherSQLSerializer(serializers.Serializer):
         p.name = validated_data.get("name", p.name)
         p.save()
         return p
+
+class JournalSQLSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(required=True, max_length=300) #TODO: change to TEXT, currently VARCHAR(300)
+
+    def create(self, validated_data):
+        j = JournalSQL()
+        j.name = validated_data.get("name")
+        j.save()
+        j.id = JournalSQL.objects.last_id()
+        return j
+    
+    def update(self, j, validated_data):
+        j.name = validated_data.get("name", j.name)
+        j.save()
+        return j
