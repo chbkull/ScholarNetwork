@@ -3,8 +3,8 @@ CREATE TABLE published_in (
     journal_id INT NOT NULL,
     edition TEXT,
     url TEXT,
-    FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE,
-    FOREIGN KEY (journal_id) REFERENCES journals(id) ON UPDATE CASCADE,
+    FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (journal_id) REFERENCES journals(id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (article_id, journal_id)
 );
 
