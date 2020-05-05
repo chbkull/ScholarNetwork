@@ -1,24 +1,16 @@
-// import React, { Component } from 'react';
+import React, { Component } from 'react'
 
-// export class Alert extends Component {
-//   state = {
-//     message: this.props.message,
-//     status: this.props.status,
-//   };
+export default class Alert extends Component {
 
-
-//   render() {
-//     const { message, status } = this.state;
-//     return (
-//       <div className="alert alert-dismissible alert-warning">
-//       <button type="button" className="close" data-dismiss="alert" onClick = {this.onClick}>
-//         &times;
-//       </button>
-//       <h4 className="alert-heading">Log In Failed</h4>
-//       <p className="mb-0">Reason : {message}</p>
-//     </div>
-//     );
-//   }
-// }
-
-// export default Alert;
+  render() {
+    return (
+      <div className="alert alert-dismissible alert-warning">
+      <button type="button" className="close" data-dismiss="alert" onClick = {this.props.onClick}>
+        &times;
+      </button>
+       <h4 className="alert-heading">Operation {this.props.status}</h4>
+      <p className="mb-0">Reason : {this.props.message}</p>
+    </div>
+    )
+  }
+}

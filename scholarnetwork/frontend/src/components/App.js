@@ -11,6 +11,7 @@ import Profile from "./receiver/Profile";
 import Article from "./receiver/Article";
 import Author from "./receiver/Author";
 import Showcase from "./layout/Showcase";
+import Network from "./receiver/Network";
 
 
 class App extends Component {
@@ -90,12 +91,12 @@ class App extends Component {
                 }/>
 
 
-              {/* <Route exact path="/article/detail" render={(props) =>
+              <Route exact path="/network" render={(props) =>
                 <Fragment>
                   <Header />
-                  <ArticleDetail />
+                  <Network />
                   </Fragment>
-                }/> */}
+                }/>
             </Switch>
           </div>
         </Fragment>

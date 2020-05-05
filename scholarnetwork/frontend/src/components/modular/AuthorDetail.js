@@ -35,6 +35,8 @@ export class AuthorDetail extends Component {
       url_picture :res.data[0].url_picture,
       status: "succeed"
     });
+    console.log("attributes",this.state.attributes);
+    console.log(this.state.attributes.split(","));
 
   }
 
@@ -50,8 +52,8 @@ export class AuthorDetail extends Component {
       module = (
         <Fragment>
 
-        <div class="alert alert-dismissible alert-primary">
-          <button type="button" class="close" data-dismiss="alert" onClick = {this.onClick}>&times;</button>
+        <div className="alert alert-dismissible alert-primary">
+          <button type="button" className="close" data-dismiss="alert" onClick = {this.onClick}>&times;</button>
             <div>
               <img src={this.state.url_picture} />
               <h5>Name: {this.state.name}</h5>
