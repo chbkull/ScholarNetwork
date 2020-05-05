@@ -1,20 +1,25 @@
 // TODO
 
 import React, { Component, Fragment } from "react";
-import PropTypes from "prop-types";
-// import { getArticleByTitle, getArticleByAuthor } from "../action/author";
-
-import axios from "axios";
+import { getArticleByTitle, getArticleByAuthor } from "../action/article";
+import 'regenerator-runtime/runtime';
+import ArticleDetail from '../modular/ArticleDetail';
 
 export class Article extends Component {
-  // Don't call this.setState() here!
 
   state = {
-    message: "",
-    // success: false,
     selector: "",
-    content: "",
+    content:"",
     result: [],
+    status:"",
+    message:"",
+    id:"",
+  };
+
+  setID = (i) => {
+    this.setState({ id: i }, () => {
+      console.log(this.state);
+    });
   };
 
   onCheck = (e) => {
@@ -31,58 +36,56 @@ export class Article extends Component {
     });
   };
 
-  onSubmit = (e) => {
+  onSubmit = async (e) => {
     e.preventDefault();
     const name = this.state.selector;
-    const content = this.state.content;
-    if (name === "author") {
-      axios
-        .get("api/articles/searchauthor/" + content)
-        .then((res) => {
-          console.log(res);
-          this.setState({ result: res.data }, () => {
-            console.log(this.state.result);
-          });
-          return { data: res, msg: "failed" };
-        })
-        .catch((err) => {
-          return { data: {}, msg: "failed" };
-        });
-    }
-    if (name === "pub_title") {
-      axios
-        .get("api/articles/searchtitle/" + content)
-        .then((res) => {
-          console.log(res);
-          this.setState({ result: res.data }, () => {
-            console.log(this.state.result);
-          });
-          return { data: res, msg: "failed" };
-        })
-        .catch((err) => {
-          return { data: {}, msg: "failed" };
-        });
-    }
+    var msg = "";
+    var s = "";
+    var req = this.state;
+    var res = { data:[], msg:"" };
+
+    if (name === "author") await getArticleByAuthor(req,res);
+    if (name === "pub_title") await getArticleByTitle(req,res);
+    s  = (res.msg === "server error" ? "fail" : "succeed");
+    msg = res.msg;
+    this.setState({ result: res.data , status: s, message:msg}, () => {
+      console.log(this.state.result);
+    });
   };
 
+  onClick = (e)=>{
+
+    this.setState({ id: e.target.value }, () => {
+      console.log(this.state);
+    });
+
+  }
+
+
   render() {
+
     const results = this.state.result;
+
     const module = results.map((entry) => {
-      const button = <Fragment></Fragment>;
+
+      var button = <Fragment></Fragment>;
       if (!entry.eprint) {
+
         button = (
-          <button type="button" class="btn btn-link" onclick={entry.eprint}>
-            Click
-          </button>
+          <button type="button" className= "btn btn-outline-info" >
+             <a href= {entry.eprint}>Click</a>
+            </button>
         );
       }
+
       return (
         <Fragment>
-          <tr class="table-light">
-            <th scope="row">{entry.pub_title}</th>
-            <td>{entry.name}</td>
-            <td>{entry.affiliation}</td>
-            <td>{entry.citedby}</td>
+          <tr className="table-light">
+            <th scope="row"  >
+              <button type="button" className="btn btn-link" value = {entry.id} onClick={this.onClick}>{entry.pub_title}</button>
+            </th>
+            {/* <td>{entry.name}</td>
+            <td>{entry.affiliation}</td> */}
             <td>{entry.pub_year}</td>
             <td>{entry.citations}</td>
             <td>{entry.pub_author}</td>
@@ -92,11 +95,18 @@ export class Article extends Component {
       );
     });
 
+    var detail = <Fragment></Fragment>;
+    if (this.state.id !== ""){
+
+      detail =  <ArticleDetail article ={this.state.id} setID = {this.setID }/>
+    }
+
     return (
       <div className="card card-body mt-4 mb-4">
-        <h2>Search Article</h2>
+        <h2> Article CRUD</h2>
+        {detail}
         <fieldset className="form-group">
-          <legend>Radio buttons</legend>
+          <legend>Key Word</legend>
           <div className="form-check">
             <label className="form-check-label">
               <input
@@ -145,9 +155,8 @@ export class Article extends Component {
           <thead>
             <tr>
               <th scope="col">pub_title</th>
-              <th scope="col">name</th>
-              <th scope="col">affiliation</th>
-              <th scope="col">citedby</th>
+              {/* <th scope="col">name</th>
+              <th scope="col">affiliation</th> */}
               <th scope="col">pub_year</th>
               <th scope="col">citations</th>
               <th scope="col">pub_author</th>

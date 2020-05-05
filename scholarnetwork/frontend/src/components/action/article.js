@@ -1,28 +1,46 @@
 import axios from "axios";
-// path('api/articles/searchtitle/<slug:searchby>', views.ArticleSearchTitle.as_view()),
-// path('api/articles/searchauthor/<slug:searchby>', views.ArticleSearchAuthor.as_view()),
-export const getArticleByTitle = (t) => {
-  axios
-    .get("api/articles/searchtitle/", {
-      pub_title: t,
-    })
-    .then((res) => {
-      return { data: res, msg: "success" };
+import 'regenerator-runtime/runtime';
+
+// // GET LEADS
+
+export const getArticleByID = async(req,res) => {
+  await axios
+    .get("api/articles/" + req.id)
+    .then((result) => {
+
+      res.data = result.data;
+      res.msg = "search succeed";
     })
     .catch((err) => {
-      return { data: {}, msg: "failed" };
+      res.data = [];
+      res.msg = "server error";
     });
 };
 
-export const getArticleByAuthor = (a) => {
-  axios
-    .get("api/articles/searchauthor/", {
-      author: a,
-    })
-    .then((res) => {
-      return { data: res, msg: "success" };
+export const getArticleByAuthor = async(req,res) => {
+  await axios
+    .get("api/articles/searchauthor/" + req.content)
+    .then((result) => {
+      res.data = result.data;
+      res.msg = "search succeed";
     })
     .catch((err) => {
-      return { data: {}, msg: "failed" };
+      res.data = [];
+      res.msg = "server error";
     });
 };
+
+export const getArticleByTitle = async(req,res) => {
+  await axios
+    .get("api/articles/searchtitle/" + req.content)
+    .then((result) => {
+      console.log(result);
+      res.data = result.data;
+      res.msg = "search succeed";
+    })
+    .catch((err) => {
+      res.data = [];
+      res.msg = "server error";
+    });
+};
+

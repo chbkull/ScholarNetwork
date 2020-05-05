@@ -7,37 +7,52 @@ import { HashRouter as Router, Route, Switch, Redirect } from "react-router-dom"
 
 import Header from "./layout/Header";
 import Login from "./receiver/Login";
-import Edit from "./receiver/Edit";
+import Profile from "./receiver/Profile";
 import Article from "./receiver/Article";
 import Author from "./receiver/Author";
-import Register from "./receiver/Register";
+import Showcase from "./layout/Showcase";
+import Network from "./receiver/Network";
+
 
 class App extends Component {
   state = {
-    email: "",
-    password: "",
-    status: "",
+    id:"",
+    // article:"",
+    // author:"",
   };
 
-  setUser = (e, p, s) => {
-    this.setState({ email: e, password: p, status: s }, () => {
+  setUser = (i) => {
+    this.setState({ id: i }, () => {
       console.log(this.state);
     });
   };
+
+
+  // setArticle = (i) => {
+  //   this.setState({ article: i }, () => {
+  //     console.log(this.state);
+  //   });
+  // };
+
+  // setAuthor = (i) => {
+  //   this.setState({ author: i }, () => {
+  //     console.log(this.state);
+  //   });
+  // };
 
   render() {
     return (
       <Router>
         <Fragment>
           <div className="container">
-            <Header />
+
             <Switch>
               <Route
                 exact
                 path="/"
                 render={(props) => (
                   <Fragment>
-                    <h1 color="white">Welcome to ScholarNet!</h1>
+                    <h1 color="white">ScholarNet</h1>
                     <Login setUser={this.setUser} />
                   </Fragment>
                 )}
@@ -45,16 +60,43 @@ class App extends Component {
 
               <Route
                 exact
-                path="/user/register"
-                render={(props) => <Register setUser={this.setUser} />}
+                path="/showcase"
+                render={(props) =>(
+                  <Fragment>
+                  <Header />
+                  <Showcase />
+                  </Fragment>)}
               />
+
               <Route
-                exact
-                path="/user/profile"
-                render={(props) => <Edit setUser={this.setUser} user={this.state} />}
-              />
-              <Route exact path="/article" render={(props) => <Article />} />
-              <Route exact path="/author" render={(props) => <Author />} />
+                exact path="/profile"
+                render={(props) =>
+                  <Fragment>
+                  <Header />
+                  <Profile setUser={this.setUser} user={this.state} />
+                  </Fragment>
+              }/>
+
+              <Route exact path="/author" render={(props) =>
+                <Fragment>
+                  <Header />
+                  <Author/>
+                </Fragment>} />
+
+              <Route exact path="/article" render={(props) =>
+                <Fragment>
+                  <Header />
+                  <Article/>
+                  </Fragment>
+                }/>
+
+
+              <Route exact path="/network" render={(props) =>
+                <Fragment>
+                  <Header />
+                  <Network />
+                  </Fragment>
+                }/>
             </Switch>
           </div>
         </Fragment>
