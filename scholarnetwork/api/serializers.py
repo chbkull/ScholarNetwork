@@ -4,14 +4,14 @@ from .models import ArticleSQL, AuthorSQL, UserSQL, PublisherSQL, JournalSQL
 
 class ArticleSQLSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(required=True, max_length=1024)
-    affiliation = serializers.CharField(required=True, max_length=1024)
-    citedby = serializers.IntegerField(required=True)
+    name = serializers.CharField(required=False, default="", max_length=1024)
+    affiliation = serializers.CharField(required=False, default="", max_length=1024)
+    citedby = serializers.IntegerField(required=False, default=0)
     pub_title = serializers.CharField(required=True, max_length=1024)
-    pub_year = serializers.IntegerField(required=True) # no year serializer?
-    citations = serializers.IntegerField(required=True)
+    pub_year = serializers.IntegerField(required=False, default=0) # no year serializer?
+    citations = serializers.IntegerField(required=False, default=0)
     pub_author = serializers.CharField(required=True, max_length=1024)
-    eprint = serializers.CharField(required=True, max_length=1024)
+    eprint = serializers.CharField(required=False, default="", max_length=1024)
 
     def create(self, validated_data):
         a = ArticleSQL()
@@ -44,18 +44,18 @@ class ArticleSQLSerializer(serializers.Serializer):
 class AuthorSQLSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(required=True, max_length=1024)
-    affiliation = serializers.CharField(required=True, max_length=1024)
-    citedby = serializers.IntegerField(required=True)
-    citedby_5 = serializers.IntegerField(required=True)
-    h_index = serializers.IntegerField(required=True)
-    h_index_5 = serializers.IntegerField(required=True)
-    i10_index = serializers.IntegerField(required=True)
-    i10_index_5 = serializers.IntegerField(required=True)
-    citedby_history = serializers.CharField(required=True, max_length=1024)
-    page = serializers.IntegerField(required=True)
-    email = serializers.CharField(required=True, max_length=1024)
-    interests = serializers.CharField(required=True, max_length=1024)
-    url_picture = serializers.CharField(required=True, max_length=1024)
+    affiliation = serializers.CharField(required=False, default="", max_length=1024)
+    citedby = serializers.IntegerField(required=False, default=0)
+    citedby_5 = serializers.IntegerField(required=False, default=0)
+    h_index = serializers.IntegerField(required=False, default=0)
+    h_index_5 = serializers.IntegerField(required=False, default=0)
+    i10_index = serializers.IntegerField(required=False, default=0)
+    i10_index_5 = serializers.IntegerField(required=False, default=0)
+    citedby_history = serializers.CharField(required=False, default="", max_length=1024)
+    page = serializers.IntegerField(required=False, default=0)
+    email = serializers.CharField(required=False, default="", max_length=1024)
+    interests = serializers.CharField(required=False, default="", max_length=1024)
+    url_picture = serializers.CharField(required=False, default="", max_length=1024)
 
     def create(self, validated_data):
         a = AuthorSQL()
@@ -97,11 +97,11 @@ class AuthorSQLSerializer(serializers.Serializer):
 
 class UserSQLSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    email = serializers.CharField(required=True, max_length=1024)
+    email = serializers.CharField(required=True, max_length=255)
     password = serializers.CharField(required=True, max_length=1024)
-    affiliation = serializers.CharField(required=True, max_length=1024)
-    history = serializers.CharField(required=True, max_length=1024)
-    interests = serializers.CharField(required=True, max_length=1024)
+    affiliation = serializers.CharField(required=False, default="", max_length=1024) # was required
+    history = serializers.CharField(required=False, default="", max_length=1024) # was required
+    interests = serializers.CharField(required=False, default="", max_length=1024) # was required
 
     def create(self, validated_data):
         u = UserSQL()
@@ -127,7 +127,7 @@ class UserSQLSerializer(serializers.Serializer):
 
 class PublisherSQLSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(required=True, max_length=1024)
+    name = serializers.CharField(required=True, max_length=512)
 
     def create(self, validated_data):
         p = PublisherSQL()
@@ -145,7 +145,7 @@ class PublisherSQLSerializer(serializers.Serializer):
 
 class JournalSQLSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(required=True, max_length=1024)
+    name = serializers.CharField(required=True, max_length=512)
 
     def create(self, validated_data):
         j = JournalSQL()
