@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import ArticleSQL, AuthorSQL, UserSQL, PublisherSQL, JournalSQL
 
 
-# pylint: disable=no-member
 class ArticleSQLSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(required=True, max_length=1024)

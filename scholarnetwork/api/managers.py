@@ -386,10 +386,11 @@ class UserSQLManager():
         query = """
             SELECT id, email, password, affiliation, history, interests
             FROM users
-            WHERE email LIKE '%{0}%';
-        """.format(
+            WHERE email = '{0}';
+        """.format( # was WHERE email = '{0}' WHERE email LIKE '%{0}%'
             search_term
         )
+        ###
 
         cursor.execute(query)
         
