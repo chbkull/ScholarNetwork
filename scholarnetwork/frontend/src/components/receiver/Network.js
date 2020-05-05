@@ -25,6 +25,9 @@ export default class Network extends Component {
             "articles":{
               caption: "pub_title",
               size: "citations",
+            },
+            'journals':{
+              caption:"journal_name",
             }
         },
         relationships: {
@@ -46,7 +49,10 @@ export default class Network extends Component {
       case "affiliation":
         tmp = "please input author name";
         break;
-      case "interest":
+      // case "interests":
+      //   tmp = "please input interests";
+      //   break;
+      case "recommendation":
         tmp = "please input interests";
         break;
       default:
@@ -69,14 +75,17 @@ export default class Network extends Component {
       case "affiliation":
         cypher = "MATCH p=(m:Authors)-[r:AFFILIATED]->(n:Authors) WHERE trim(toUpper(n.name)) = trim(\'"+content+"\') RETURN p LIMIT 25"
         break;
-      case "interest":
-        cypher = "MATCH(n:Authors) UNWIND n.interests AS INTERS WITH n AS auth, INTERS AS INTYS WHERE trim(toUpper(INTYS)) = trim(\'"+content+"\') MATCH p = (auth)-[:WROTE]->(:articles) RETURN p LIMIT 100";
-        break;
+      case "recommendation":
+          cypher = "MATCH(n:Authors) UNWIND n.interests AS INTERS WITH n AS auth, INTERS AS INTYS WHERE trim(toUpper(INTYS)) = trim(\'"+content+"\') MATCH p = (auth)-[:WROTE]->(:articles)-[:PUBLISHED_IN]->(j:journals) RETURN p LIMIT 100";
+          break;
+      // case "interest":
+      //   cypher = "MATCH(n:Authors) UNWIND n.interests AS INTERS WITH n AS auth, INTERS AS INTYS WHERE trim(toUpper(INTYS)) = trim(\'"+content+"\') MATCH p = (auth)-[:WROTE]->(:articles) RETURN p LIMIT 100";
       default:
-        cypher = "MATCH(n:Authors) UNWIND n.interests AS INTERS WITH n AS auth, INTERS AS INTYS WHERE toUpper(INTYS) = \'"+content+"\' MATCH p = (auth)-[:WROTE]->(:articles) RETURN p LIMIT 100";
+        cypher = "MATCH p = (m:Authors)-[:WROTE]->(n:articles)-[:PUBLISHED_IN]->(:journals) WHERE trim(toUpper(m.name)) = trim(\'"+content+"\') RETURN p"
     };
 
     this.state.viz.renderWithCypher(cypher);
+    this.setState({ content: ""});
 
   };
 
@@ -91,9 +100,9 @@ export default class Network extends Component {
 
     return (
       <div className="card card-body mt-4 mb-4">
-        <h2> Article CRUD</h2>
+        <h2> Network Detector</h2>
         <fieldset className="form-group">
-          <legend>Key Word</legend>
+          <legend>Functions</legend>
           <div className="form-check">
             <label className="form-check-label">
               <input
@@ -104,10 +113,10 @@ export default class Network extends Component {
                 value="affiliation"
                 onChange={this.onCheck}
               />
-              affiliation
+              Find his colleagues
             </label>
           </div>
-          <div className="form-check">
+          {/* <div className="form-check">
             <label className="form-check-label">
               <input
                 type="radio"
@@ -117,9 +126,37 @@ export default class Network extends Component {
                 value="interests"
                 onChange={this.onCheck}
               />
-              interests
+              Find authors with similar interets
+            </label>
+          </div> */}
+          <div className="form-check">
+            <label className="form-check-label">
+              <input
+                type="radio"
+                className="form-check-input"
+                name="optionsRadios"
+                id="optionsRadios3"
+                value="recommendation"
+                onChange={this.onCheck}
+              />
+              Find authors, articles and journals you may be interested in
             </label>
           </div>
+          <div className="form-check">
+            <label className="form-check-label">
+              <input
+                type="radio"
+                className="form-check-input"
+                name="optionsRadios"
+                id="optionsRadios4"
+                value="works"
+                onChange={this.onCheck}
+              />
+              Find his work in the past
+            </label>
+          </div>
+
+
         </fieldset>
         <form onSubmit={this.onSubmit}>
           <div className="form-group">

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { Redirect } from "react-router-dom";
 import {getUserByEmail,getUserByID, deleteUserByID,updateUserByID} from "../action/user";
 import 'regenerator-runtime/runtime';
-import Alert from '../modular/Alert';
 import { async } from 'regenerator-runtime/runtime';
 
 export class Profile extends Component {
@@ -58,9 +57,7 @@ export class Profile extends Component {
     var res = { data:[], msg:""};
 
     await deleteUserByID(req,res);
-
-
-    if (res.msg !== "delete succeed"){
+    if (res.data.length === 0){
       this.setState({
         affiliation: this.state.reset.affiliation,
         interests: this.state.reset.interests,
@@ -103,41 +100,27 @@ export class Profile extends Component {
     e.preventDefault();
     var res = { data:[], msg:""};
     var req = this.state;
-    if (req.email === "" || req.password === ""){
-      await this.setState({
+    await getUserByEmail(req, res);
+    if (res.data.length !== 0 && res.data[0].id !== req.id){
+      this.setState({
         affiliation: this.state.reset.affiliation,
         interests: this.state.reset.interests,
         history:this.state.reset.history,
         email: this.state.reset.email,
         password: this.state.reset.password,
         status:'Failed',
-        message:"email and password is required"
+        message:"email must be unique"
       });
+
     }
-    else {
-      await getUserByEmail(req, res);
-
-      if (res.data.length !== 0 && res.data[0].id !== req.id){
-        this.setState({
-          affiliation: this.state.reset.affiliation,
-          interests: this.state.reset.interests,
-          history:this.state.reset.history,
-          email: this.state.reset.email,
-          password: this.state.reset.password,
-          status:'Failed',
-          message:"email must be unique"
-        });
-
-      }
-      else{
-        await updateUserByID(req, res);
-        this.setState({
-          reset:res.data,
-          status:'Succeeded',
-          message: 'Successfully updated user profile',
-        });
-        // document.getElementById('registerForm').reset();
-      }
+    else{
+      await updateUserByID(req, res);
+      this.setState({
+        reset:res.data,
+        status:'Succeeded',
+        message: 'Successfully updated user profile',
+      });
+      document.getElementById('registerForm').reset();
     }
   };
 
@@ -167,7 +150,13 @@ export class Profile extends Component {
     var modular = <Fragment></Fragment>;
 
     if (status === "Failed" || status === "Succeeded"){
-      modular = <Alert onClick = {this.onClick} message = {message} status ={status}/>
+      modular = (<div className="alert alert-dismissible alert-warning">
+      <button type="button" className="close" data-dismiss="alert" onClick = {this.onClick}>
+        &times;
+      </button>
+      <h4 className="alert-heading">Operation {status}</h4>
+        <p className="mb-0">Reason : {message}</p>
+      </div>);
     }
 
     if (status === 'redirect'){
@@ -180,6 +169,16 @@ export class Profile extends Component {
         <h2>User Profile</h2>
         <div>{modular}</div>
         <form id="registerForm">
+          {/* <div className="form-group">
+            <label>Name</label>
+            <input
+              className="form-control"
+              type="text"
+              name="name"
+              onChange={this.onChange}
+              value={name}
+            />
+          </div> */}
           <div className="form-group">
             <label>Email</label>
             <input
