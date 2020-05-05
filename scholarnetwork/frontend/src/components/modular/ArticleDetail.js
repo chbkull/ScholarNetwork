@@ -21,7 +21,7 @@ export default class ArticleDetail extends Component {
 
 
     await getArticleByID(req, res);
-    console.log(res);
+    console.log("return ", res.data);
 
     await this.setState({
       name:res.data[0].name,

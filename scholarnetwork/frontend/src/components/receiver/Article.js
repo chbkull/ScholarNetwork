@@ -84,8 +84,8 @@ export class Article extends Component {
             <th scope="row"  >
               <button type="button" className="btn btn-link" value = {entry.id} onClick={this.onClick}>{entry.pub_title}</button>
             </th>
-            <td>{entry.name}</td>
-            <td>{entry.affiliation}</td>
+            {/* <td>{entry.name}</td>
+            <td>{entry.affiliation}</td> */}
             <td>{entry.pub_year}</td>
             <td>{entry.citations}</td>
             <td>{entry.pub_author}</td>
@@ -155,8 +155,8 @@ export class Article extends Component {
           <thead>
             <tr>
               <th scope="col">pub_title</th>
-              <th scope="col">name</th>
-              <th scope="col">affiliation</th>
+              {/* <th scope="col">name</th>
+              <th scope="col">affiliation</th> */}
               <th scope="col">pub_year</th>
               <th scope="col">citations</th>
               <th scope="col">pub_author</th>

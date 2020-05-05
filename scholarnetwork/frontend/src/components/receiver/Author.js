@@ -4,9 +4,7 @@ import React, { Component, Fragment } from "react";
 import AuthorDetail from '../modular/AuthorDetail';
 import {getAuthorByAffiliation, getAuthorByName} from '../action/author';
 import 'regenerator-runtime/runtime';
-import { async } from "regenerator-runtime/runtime";
 export class Author extends Component {
-  // Don't call this.setState() here!
 
   state = {
     selector: "",
