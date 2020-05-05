@@ -80,8 +80,7 @@ class ArticleSQLManager():
         cursor = connection.cursor()
         query = """
             SELECT id, name, affiliation, citedby, pub_title, pub_year, citations, pub_author, eprint
-            FROM articles
-            LIMIT 10;
+            FROM articles;
         """
 
         cursor.execute(query)
@@ -218,8 +217,7 @@ class AuthorSQLManager():
         cursor = connection.cursor()
         query = """
             SELECT id, name, affiliation, citedby, citedby_5, h_index, h_index_5, i10_index, i10_index_5, citedby_history, page, email, interests, url_picture
-            FROM authors
-            LIMIT 10;
+            FROM authors;
         """
 
         cursor.execute(query)
@@ -344,8 +342,7 @@ class UserSQLManager():
         cursor = connection.cursor()
         query = """
             SELECT id, email, password, affiliation, history, interests
-            FROM users
-            LIMIT 10;
+            FROM users;
         """
 
         cursor.execute(query)
@@ -466,8 +463,7 @@ class PublisherSQLManager():
         cursor = connection.cursor()
         query = """
             SELECT id, name
-            FROM publishers
-            LIMIT 10;
+            FROM publishers;
         """
 
         cursor.execute(query)
@@ -572,8 +568,7 @@ class JournalSQLManager():
         cursor = connection.cursor()
         query = """
             SELECT id, name
-            FROM journals
-            LIMIT 10;
+            FROM journals;
         """
 
         cursor.execute(query)
