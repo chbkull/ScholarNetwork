@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ArticleSQL, AuthorSQL, UserSQL, PublisherSQL, JournalSQL
+from .models import ArticleSQL, AuthorSQL, UserSQL, PublisherSQL, JournalSQL, ComplexSQL
 
 
 class ArticleSQLSerializer(serializers.Serializer):
@@ -159,3 +159,18 @@ class JournalSQLSerializer(serializers.Serializer):
         j.name = validated_data.get("name", j.name)
         j.save()
         return j
+
+class ComplexSQLSerializer(serializers.Serializer):
+    str_1 = serializers.CharField(read_only=True, max_length=1024)
+    str_2 = serializers.CharField(read_only=True, max_length=1024)
+    str_3 = serializers.CharField(read_only=True, max_length=1024)
+    str_4 = serializers.CharField(read_only=True, max_length=1024)
+    str_5 = serializers.CharField(read_only=True, max_length=1024)
+    str_6 = serializers.CharField(read_only=True, max_length=1024)
+    str_7 = serializers.CharField(read_only=True, max_length=1024)
+    str_8 = serializers.CharField(read_only=True, max_length=1024)
+    int_1 = serializers.IntegerField(read_only=True)
+    int_2 = serializers.IntegerField(read_only=True)
+    int_3 = serializers.IntegerField(read_only=True)
+    int_4 = serializers.IntegerField(read_only=True)
+    dec_1 = serializers.DecimalField(read_only=True, max_digits=10, decimal_places=2, coerce_to_string=False)

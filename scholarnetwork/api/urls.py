@@ -38,6 +38,16 @@ urlpatterns = [
     path('api/journals/<int:id>', views.JournalSQLDetail),
     path('api/journals/searchname/<str:search_term>', views.JournalSQLSearchName),
     path('api/journals/searchname/', views.JournalSQLSearchNameJson),
+
+    # complex queries - joins, interesting statistics or both
+    path('api/complex/articlesinjournal/<str:search_term>', views.ComplexSQLArticlesInJournal),
+    path('api/complex/articlesfrompublisher/<str:search_term>', views.ComplexSQLArticlesFromPublisher),
+    path('api/complex/journalavghindex/', views.ComplexSQLJournalAvgHIndex),
+    path('api/complex/publisheravghindex/', views.ComplexSQLPublisherAvgHIndex),
+    path('api/complex/publisherjournalspublished/', views.ComplexSQLPublisherJournalsPublished),
+    path('api/complex/authorjournalspublishedin/', views.ComplexSQLAuthorJournalsPublishedIn),
+    path('api/complex/journalcitedbystats/', views.ComplexSQLJournalCitedbyStats),
+    path('api/complex/publishercitedbystats/', views.ComplexSQLPublisherCitedbyStats),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
