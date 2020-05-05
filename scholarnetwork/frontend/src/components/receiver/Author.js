@@ -1,18 +1,24 @@
 // TODO
 
 import React, { Component, Fragment } from "react";
-import PropTypes from "prop-types";
-import axios from "axios";
-
+import AuthorDetail from '../modular/AuthorDetail';
+import {getAuthorByAffiliation, getAuthorByName} from '../action/author';
+import 'regenerator-runtime/runtime';
 export class Author extends Component {
-  // Don't call this.setState() here!
 
   state = {
-    message: "",
-    success: false,
     selector: "",
     content: "",
     result: [],
+    status:"",
+    message:"",
+    id:"",
+  };
+
+  setID = (i) => {
+    this.setState({ id: i }, () => {
+      console.log(this.state);
+    });
   };
 
   onCheck = (e) => {
@@ -29,66 +35,75 @@ export class Author extends Component {
     });
   };
 
-  onSubmit = (e) => {
+  onSubmit =async (e) => {
     e.preventDefault();
     const name = this.state.selector;
-    const content = this.state.content;
-    if (name === "name") {
-      axios
-        .get("api/authors/searchname/" + content)
-        .then((res) => {
-          console.log(res);
-          this.setState({ result: res.data }, () => {
-            console.log(this.state.result);
-          });
-          return { data: res, msg: "failed" };
-        })
-        .catch((err) => {
-          return { data: {}, msg: "failed" };
-        });
-    }
-    if (name === "affiliation") {
-      axios
-        .get("api/authors/searchaffiliation/" + content)
-        .then((res) => {
-          console.log(res);
-          this.setState({ result: res.data }, () => {
-            console.log(this.state.result);
-          });
-          return { data: res, msg: "failed" };
-        })
-        .catch((err) => {
-          return { data: {}, msg: "failed" };
-        });
-    }
+    var msg = "";
+    var s = "";
+    var req = this.state;
+    var res = { data:[], msg:"" };
+
+    if (name === "name") await getAuthorByName(req,res);
+    if (name === "affiliation") await getAuthorByAffiliation(req,res);
+    s  = (res.msg === "server error" ? "fail" : "succeed");
+    msg = res.msg;
+    await this.setState({ result: res.data , status: s, message:msg, content:""}, () => {
+      console.log(this.state.result);
+    });
+
   };
+
+  onClick = async (e)=>{
+
+    console.log("pass author id",e.target.value);
+    await this.setState({ id: e.target.value }, () => {
+      console.log("state", this.state);
+    });
+
+  }
+
 
   render() {
     const results = this.state.result;
 
-    const module = results.map((entry) => {
+    var module = results.map((entry) => {
+
       return (
+
         <Fragment>
-          <tr class="table-light">
-            <th scope="row">{entry.name}</th>
+          <tr className="table-light">
+            <th scope="row"  >
+              <button type="button" className="btn btn-link" value = {entry.id} onClick={this.onClick}>{entry.name}</button>
+            </th>
             <td>{entry.citedby}</td>
             <td>{entry.email}</td>
-            <td>{entry.user}</td>
+            <td>{entry.affiliation}</td>
+            {/* <td>{entry.user}</td> */}
           </tr>
         </Fragment>
       );
     });
 
+    var detail = <Fragment></Fragment>
+
+    if (this.state.id !== ""){
+      console.log("id",this.state.id);
+      detail =  <AuthorDetail author ={this.state.id} setID = {this.setID }/>;
+    }
+
+
+
     return (
       <div className="card card-body mt-4 mb-4">
-        <h2>Search Article</h2>
-        <fieldset class="form-group">
-          <legend>Radio buttons</legend>
-          <div class="form-check">
-            <label class="form-check-label">
+        <h2>Author CRUD</h2>
+        {detail}
+        <fieldset className="form-group">
+          <legend>Key Word </legend>
+          <div className="form-check">
+            <label className="form-check-label">
               <input
                 type="radio"
-                class="form-check-input"
+                className="form-check-input"
                 name="optionsRadios"
                 id="optionsRadios1"
                 value="affiliation"
@@ -97,11 +112,11 @@ export class Author extends Component {
               affiliation
             </label>
           </div>
-          <div class="form-check">
-            <label class="form-check-label">
+          <div className="form-check">
+            <label className="form-check-label">
               <input
                 type="radio"
-                class="form-check-input"
+                className="form-check-input"
                 name="optionsRadios"
                 id="optionsRadios2"
                 value="name"
@@ -128,13 +143,14 @@ export class Author extends Component {
             </button>
           </div>
         </form>
-        <table class="table table-hover">
+        <table className="table table-hover">
           <thead>
             <tr>
               <th scope="col">name</th>
               <th scope="col">citedby</th>
               <th scope="col">email</th>
-              <th scope="col">user account</th>
+              <th scope="col">affiliation</th>
+              {/* <th scope="col">user account</th> */}
             </tr>
           </thead>
           <tbody>{module}</tbody>
