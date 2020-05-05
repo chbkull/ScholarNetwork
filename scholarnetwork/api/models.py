@@ -1,5 +1,5 @@
 from django.db import models
-from .managers import ArticleSQLManager, AuthorSQLManager, UserSQLManager, PublisherSQLManager, JournalSQLManager
+from .managers import ArticleSQLManager, AuthorSQLManager, UserSQLManager, PublisherSQLManager, JournalSQLManager, ComplexSQLManager
 
 
 class ArticleSQL():
@@ -108,3 +108,20 @@ class JournalSQL():
     
     def delete(self):
         self.objects.delete(self)
+
+class ComplexSQL():
+    objects = ComplexSQLManager()
+
+    def __init__(self):
+        self.str_1 = None
+        self.str_2 = None
+        self.str_3 = None
+        self.str_4 = None
+        self.str_5 = None
+        self.str_6 = None
+        self.str_7 = None
+        self.str_8 = None
+        self.int_1 = None
+        self.int_2 = None
+        self.int_3 = None
+        self.int_4 = None
