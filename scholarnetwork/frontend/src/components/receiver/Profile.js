@@ -150,13 +150,14 @@ export class Profile extends Component {
     var modular = <Fragment></Fragment>;
 
     if (status === "Failed" || status === "Succeeded"){
-      modular = (<div className="alert alert-dismissible alert-warning">
-      <button type="button" className="close" data-dismiss="alert" onClick = {this.onClick}>
-        &times;
-      </button>
-      <h4 className="alert-heading">Operation {status}</h4>
-        <p className="mb-0">Reason : {message}</p>
-      </div>);
+      modular = <Alert onClick = {this.onClick} message = {message} status ={status}/>
+    //   modular = (<div className="alert alert-dismissible alert-warning">
+    //   <button type="button" className="close" data-dismiss="alert" onClick = {this.onClick}>
+    //     &times;
+    //   </button>
+    //   <h4 className="alert-heading">Operation {status}</h4>
+    //     <p className="mb-0">Reason : {message}</p>
+    //   </div>);
     }
 
     if (status === 'redirect'){
