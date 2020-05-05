@@ -1,0 +1,2 @@
+Before you start creating any of the tables, you need to import article_original.csv and author_original.csv into the database as article_original and author_original respectively.
+You could also just directly import the dbschema.sql file.
