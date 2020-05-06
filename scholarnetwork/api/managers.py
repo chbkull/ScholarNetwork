@@ -12,14 +12,16 @@ class ArticleSQLManager():
         for row in cursor.fetchall():
                 a = ArticleSQL()
                 a.id = row[0]
-                a.name = row[1]
-                a.affiliation = row[2]
-                a.citedby = row[3]
-                a.pub_title = row[4]
-                a.pub_year = row[5]
-                a.citations = row[6]
-                a.pub_author = row[7]
-                a.eprint = row[8]
+                a.title = row[1]
+                a.author_id = row[2]
+                a.authors = row[3]
+                a.citations = row[4]
+                a.journal_id = row[5]
+                a.year = row[6]
+                a.issue = row[7]
+                a.publisher_id = row[8]
+                a.eprint = row[9]
+                a.url = row[10]
                 articles.append(a)
 
         return articles        
@@ -27,20 +29,56 @@ class ArticleSQLManager():
     @staticmethod
     def insert(a):
         cursor = connection.cursor()
+
         query = """
-            INSERT INTO articles (name, affiliation, citedby, pub_title, pub_year, citations, pub_author, eprint)
-            VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}');
+            INSERT INTO articles (title, author_id, authors, citations, journal_id, year, issue, publisher_id, eprint, url)
+            VALUES ('{0}', NULL, '{1}', '{2}', NULL, '{3}', '{4}', NULL, '{5}', '{6}');
         """.format(
-            a.name, a.affiliation, a.citedby, a.pub_title, a.pub_year, a.citations, a.pub_author, a.eprint
+            a.title, a.authors, a.citations, a.year, a.issue, a.eprint, a.url
         )
 
         cursor.execute(query)
+
+        a.id = ArticleSQLManager.last_id()
+
+        if a.author_id is not None:
+        
+            query = """
+                UPDATE articles SET author_id={0}
+                WHERE id={1}
+            """.format(
+                a.author_id, a.id
+            )
+
+            cursor.execute(query)
+
+        if a.journal_id is not None:
+
+            query = """
+                UPDATE articles SET journal_id={0}
+                WHERE id={1}
+            """.format(
+                a.journal_id, a.id
+            )
+
+            cursor.execute(query)
+
+        if a.publisher_id is not None:
+
+            query = """
+                UPDATE articles SET publisher_id={0}
+                WHERE id={1}
+            """.format(
+                a.publisher_id, a.id
+            )
+
+            cursor.execute(query)
 
     @staticmethod
     def get(id):
         cursor = connection.cursor()
         query = """
-            SELECT id, name, affiliation, citedby, pub_title, pub_year, citations, pub_author, eprint
+            SELECT id, title, author_id, authors, citations, journal_id, year, issue, publisher_id, eprint, url
             FROM articles
             WHERE id={0};
         """.format(
@@ -57,16 +95,49 @@ class ArticleSQLManager():
     def update(a):
         cursor = connection.cursor()
         query = """
-            UPDATE articles SET name='{0}', affiliation='{1}', citedby='{2}', pub_title='{3}',
-                pub_year='{4}', citations='{5}', pub_author='{6}', eprint='{7}'
-            WHERE id={8};
+            UPDATE articles SET title='{0}', authors='{1}', citations='{2}',
+                year='{3}', issue='{4}', eprint='{5}', url='{6}'
+            WHERE id={7};
         """.format(
-            a.name, a.affiliation, a.citedby, a.pub_title,
-                a.pub_year, a.citations, a.pub_author, a.eprint,
+            a.title, a.authors, a.citations,
+                a.year, a.issue, a.eprint, a.url,
             a.id
         )
 
         cursor.execute(query)
+
+        if a.author_id is not None:
+        
+            query = """
+                UPDATE articles SET author_id={0}
+                WHERE id={1}
+            """.format(
+                a.author_id, a.id
+            )
+
+            cursor.execute(query)
+
+        if a.journal_id is not None:
+
+            query = """
+                UPDATE articles SET journal_id={0}
+                WHERE id={1}
+            """.format(
+                a.journal_id, a.id
+            )
+
+            cursor.execute(query)
+
+        if a.publisher_id is not None:
+
+            query = """
+                UPDATE articles SET publisher_id={0}
+                WHERE id={1}
+            """.format(
+                a.publisher_id, a.id
+            )
+
+            cursor.execute(query)
 
     @staticmethod
     def delete(a):
@@ -79,8 +150,9 @@ class ArticleSQLManager():
     def all():
         cursor = connection.cursor()
         query = """
-            SELECT id, name, affiliation, citedby, pub_title, pub_year, citations, pub_author, eprint
-            FROM articles;
+            SELECT id, title, author_id, authors, citations, journal_id, year, issue, publisher_id, eprint, url
+            FROM articles
+            LIMIT 10;
         """
 
         cursor.execute(query)
@@ -105,9 +177,9 @@ class ArticleSQLManager():
     def search_title(search_term):
         cursor = connection.cursor()
         query = """
-            SELECT id, name, affiliation, citedby, pub_title, pub_year, citations, pub_author, eprint
+            SELECT id, title, author_id, authors, citations, journal_id, year, issue, publisher_id, eprint, url
             FROM articles
-            WHERE pub_title LIKE '%{0}%';
+            WHERE title LIKE '%{0}%';
         """.format(
             search_term
         )
@@ -120,9 +192,9 @@ class ArticleSQLManager():
     def search_author(search_term):
         cursor = connection.cursor()
         query = """
-            SELECT id, name, affiliation, citedby, pub_title, pub_year, citations, pub_author, eprint
+            SELECT id, title, author_id, authors, citations, journal_id, year, issue, publisher_id, eprint, url
             FROM articles
-            WHERE pub_author LIKE '%{0}%';
+            WHERE authors LIKE '%{0}%';
         """.format(
             search_term
         )
@@ -603,21 +675,6 @@ class JournalSQLManager():
         
         return JournalSQLManager.extract_journals(cursor)
 
-class RelationshipSQLManager():
-
-    @staticmethod
-    def add_written_by(article_id, author_id):
-        cursor = connection.cursor()
-        query = """
-            INSERT INTO written_by (article_id, author_id)
-            VALUES ('{0}', '{1}');
-        """.format(
-            article_id, author_id
-        )
-
-        cursor.execute(query)
-
-
 class ComplexSQLManager():
 
     @staticmethod
@@ -643,12 +700,10 @@ class ComplexSQLManager():
     def articles_in_journal(search_term):
         cursor = connection.cursor()
         query = """
-            SELECT journals.id, journals.name, articles.id, articles.pub_title, articles.pub_author
+            SELECT journals.id, journals.name, articles.id, articles.title, articles.authors
             FROM journals
-            INNER JOIN published_in
-            ON journals.id = published_in.journal_id
             INNER JOIN articles
-            ON published_in.article_id = articles.id
+            ON journals.id = articles.journal_id
             WHERE journals.name LIKE "%{0}%";
         """.format(
             search_term
@@ -664,8 +719,8 @@ class ComplexSQLManager():
             c.int_1 = row[0] # journals.id
             c.str_1 = row[1] # journals.name
             c.int_2 = row[2] # articles.id
-            c.str_2 = row[3] # articles.pub_title
-            c.str_3 = row[4] # articles.pub_author
+            c.str_2 = row[3] # articles.title
+            c.str_3 = row[4] # articles.authors
             results.append(c)
 
         return results
@@ -674,12 +729,10 @@ class ComplexSQLManager():
     def articles_from_publisher(search_term):
         cursor = connection.cursor()
         query = """
-            SELECT publishers.id, publishers.name, articles.id, articles.pub_title, articles.pub_author
+            SELECT publishers.id, publishers.name, articles.id, articles.title, articles.authors
             FROM publishers
-            INNER JOIN published_by
-            ON publishers.id = published_by.publisher_id
             INNER JOIN articles
-            ON published_by.article_id = articles.id
+            ON publishers.id = articles.publisher_id
             WHERE publishers.name LIKE "%{0}%";
         """.format(
             search_term
@@ -695,8 +748,8 @@ class ComplexSQLManager():
             c.int_1 = row[0] # publishers.id
             c.str_1 = row[1] # publishers.name
             c.int_2 = row[2] # articles.id
-            c.str_2 = row[3] # articles.pub_title
-            c.str_3 = row[4] # articles.pub_author
+            c.str_2 = row[3] # articles.title
+            c.str_3 = row[4] # articles.authors
             results.append(c)
 
         return results
@@ -707,14 +760,10 @@ class ComplexSQLManager():
         query = """
             SELECT journals.id, journals.name, AVG(authors.h_index) as average_h_index, COUNT(authors.name) as author_count
             FROM journals
-            INNER JOIN published_in
-            ON journals.id = published_in.journal_id
             INNER JOIN articles
-            ON published_in.article_id = articles.id
-            INNER JOIN written_by
-            ON articles.id = written_by.article_id
+            ON journals.id = articles.journal_id
             INNER JOIN authors
-            ON written_by.author_id = authors.id
+            ON articles.author_id = authors.id
             GROUP BY journals.id
             HAVING author_count >= 20
             ORDER BY average_h_index DESC;
@@ -741,14 +790,10 @@ class ComplexSQLManager():
         query = """
             SELECT publishers.id, publishers.name, AVG(authors.h_index) as average_h_index, COUNT(authors.name) as author_count
             FROM publishers
-            INNER JOIN published_by
-            ON publishers.id = published_by.publisher_id
             INNER JOIN articles
-            ON published_by.article_id = articles.id
-            INNER JOIN written_by
-            ON articles.id = written_by.article_id
+            ON publishers.id = articles.publisher_id
             INNER JOIN authors
-            ON written_by.author_id = authors.id
+            ON articles.author_id = authors.id
             GROUP BY publishers.id
             HAVING author_count >= 30
             ORDER BY average_h_index DESC;
@@ -773,13 +818,12 @@ class ComplexSQLManager():
     def publisher_journals_published():
         cursor = connection.cursor()
         query = """
-            SELECT publishers.id, publishers.name, COUNT(DISTINCT published_in.journal_id) as journal_count FROM publishers
-            INNER JOIN published_by
-            ON publishers.id = published_by.publisher_id
+            SELECT publishers.id, publishers.name, COUNT(DISTINCT journals.id) as journal_count
+            FROM publishers
             INNER JOIN articles
-            ON published_by.article_id = articles.id
-            INNER JOIN published_in
-            ON articles.id = published_in.article_id
+            ON publishers.id = articles.publisher_id
+            INNER JOIN journals
+            ON articles.journal_id = journals.id
             GROUP BY publishers.id
             ORDER BY journal_count DESC;
         """
@@ -802,19 +846,16 @@ class ComplexSQLManager():
     def author_journals_published_in():
         cursor = connection.cursor()
         query = """
-            SELECT author_id, author_name, COUNT(journal_name) as journal_count FROM (
-                SELECT DISTINCT authors.id as author_id, articles.name as author_name, journals.name as journal_name 
+            SELECT author_id, author_name, COUNT(journal_name) as journal_count
+            FROM (
+                SELECT DISTINCT authors.id as author_id, authors.name as author_name, journals.name as journal_name 
                 FROM articles
-                INNER JOIN published_in
-                ON articles.id = published_in.article_id
                 INNER JOIN journals
-                ON published_in.journal_id = journals.id
-                INNER JOIN written_by
-                ON articles.id = written_by.article_id
+                ON articles.journal_id = journals.id
                 INNER JOIN authors
-                ON written_by.author_id = authors.id
+                ON articles.author_id = authors.id
             ) as subquery
-            GROUP BY author_name
+            GROUP BY author_id
             ORDER BY journal_count DESC;
         """
 
@@ -826,7 +867,7 @@ class ComplexSQLManager():
         for row in cursor.fetchall():
             c = ComplexSQL()
             c.int_1 = row[0] # authors.id
-            c.str_1 = row[1] # articles.name (note this is the same as authors.name)
+            c.str_1 = row[1] # authors.name
             c.int_2 = row[2] # number of journals
             results.append(c)
 
@@ -836,12 +877,10 @@ class ComplexSQLManager():
     def journal_citedby_stats():
         cursor = connection.cursor()
         query = """
-            SELECT journals.id, journals.name, AVG(articles.citedby) as avg_citedby, SUM(articles.citedby) as total_citedby, COUNT(articles.id) as article_count
+            SELECT journals.id, journals.name, AVG(articles.citations) as avg_citedby, SUM(articles.citations) as total_citedby, COUNT(articles.id) as article_count
             FROM journals
-            INNER JOIN published_in
-            ON journals.id = published_in.journal_id
             INNER JOIN articles
-            ON published_in.article_id = articles.id
+            ON journals.id = articles.journal_id
             GROUP BY journals.id
             HAVING article_count >= 20
             ORDER BY avg_citedby DESC;
@@ -867,12 +906,10 @@ class ComplexSQLManager():
     def publisher_citedby_stats():
         cursor = connection.cursor()
         query = """
-            SELECT publishers.id, publishers.name, AVG(articles.citedby) as avg_citedby, SUM(articles.citedby) as total_citedby, COUNT(articles.id) as article_count
+            SELECT publishers.id, publishers.name, AVG(articles.citations) as avg_citedby, SUM(articles.citations) as total_citedby, COUNT(articles.id) as article_count
             FROM publishers
-            INNER JOIN published_by
-            ON publishers.id = published_by.publisher_id
             INNER JOIN articles
-            ON published_by.article_id = articles.id
+            ON publishers.id = articles.publisher_id
             GROUP BY publishers.id
             HAVING article_count >= 20
             ORDER BY avg_citedby DESC;
