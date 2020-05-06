@@ -56,6 +56,10 @@ urlpatterns = [
     path('api/journals/searchname/<str:search_term>', views.JournalSQLSearchName), # GET - searches for journals with term in name
     # path('api/journals/searchname/', views.JournalSQLSearchNameJson),
 
+    
+    # relationships
+    path('api/writtenby/', views.AddWrittenBy), # POST - creates a new writtenby relationship
+
 
     # complex queries - joins, interesting statistics or both
 
