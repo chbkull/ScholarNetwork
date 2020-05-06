@@ -52,11 +52,11 @@ urlpatterns = [
     # complex queries - joins, interesting statistics or both
 
     # Representation of published_in table
-    # returns: int_1 = journals.id, str_1 = journals.name, int_2 = articles.id, str_2 = articles.pub_title, str_3 = articles.pub_author
+    # returns: int_1 = journals.id, str_1 = journals.name, int_2 = articles.id, str_2 = articles.title, str_3 = articles.authors
     path('api/complex/articlesinjournal/<str:search_term>', views.ComplexSQLArticlesInJournal), # GET request
 
     # Representation of published_by table
-    # returns: int_1 = publishers.id, str_1 = publishers.name, int_2 = articles.id, str_2 = articles.pub_title, str_3 = articles.pub_author
+    # returns: int_1 = publishers.id, str_1 = publishers.name, int_2 = articles.id, str_2 = articles.title, str_3 = articles.authors
     path('api/complex/articlesfrompublisher/<str:search_term>', views.ComplexSQLArticlesFromPublisher), # GET request
 
     # Computes all journals' average h-index based on the h-index of contributing authors
