@@ -4,80 +4,84 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
     # articles
-    # path('api/articles/', views.ArticleList.as_view()),
-    path('api/articles/', views.ArticleSQLList),
-    # path('api/articles/<int:pk>', views.ArticleDetail.as_view()),
-    path('api/articles/<int:id>', views.ArticleSQLDetail),
-    # path('api/articles/searchtitle/<slug:searchby>', views.ArticleSearchTitle.as_view()),
-    path('api/articles/searchtitle/<slug:search_term>', views.ArticleSQLSearchTitle),
-    path('api/articles/searchtitle/', views.ArticleSQLSearchTitleJson),
-    # path('api/articles/searchauthor/<slug:searchby>', views.ArticleSearchAuthor.as_view()),
-    path('api/articles/searchauthor/<slug:search_term>', views.ArticleSQLSearchAuthor),
-    path('api/articles/searchauthor/', views.ArticleSQLSearchAuthorJson),
+    path('api/articles/', views.ArticleSQLList), # GET - returns ALL articles, POST - creates new article
+
+    path('api/articles/<int:id>', views.ArticleSQLDetail), # GET - returns article with id, PUT - updates article with id, DELETE - deletes article with id
+
+    path('api/articles/searchtitle/<str:search_term>', views.ArticleSQLSearchTitle), # GET - searches for articles with term in title
+
+    path('api/articles/searchauthor/<str:search_term>', views.ArticleSQLSearchAuthor), # GET - searches for articles with term in author name
     
+
     # authors
-    # path('api/authors/', views.AuthorList.as_view()),
-    path('api/authors/', views.AuthorSQLList),
-    # path('api/authors/<int:pk>', views.AuthorDetail.as_view()),
-    path('api/authors/<int:id>', views.AuthorSQLDetail),
-    # path('api/authors/searchname/<slug:searchby>', views.AuthorSearchName.as_view()),
-    path('api/authors/searchname/<slug:search_term>', views.AuthorSQLSearchName),
-    path('api/authors/searchname/', views.AuthorSQLSearchNameJson),
-    # path('api/authors/searchaffiliation/<slug:searchby>', views.AuthorSearchAffiliation.as_view()),
-    path('api/authors/searchaffiliation/<slug:search_term>', views.AuthorSQLSearchAffiliation),
-    path('api/authors/searchaffiliation/', views.AuthorSQLSearchAffiliationJson),
+    path('api/authors/', views.AuthorSQLList), # GET - returns ALL authors, POST - creates new author
+
+    path('api/authors/<int:id>', views.AuthorSQLDetail), # GET - returns author with id, PUT - updates author with id, DELETE - deletes author with id
+
+    path('api/authors/searchname/<str:search_term>', views.AuthorSQLSearchName), # GET - searches for authors with term in name
+
+    path('api/authors/searchaffiliation/<str:search_term>', views.AuthorSQLSearchAffiliation), # GET - searches for authors with term in affiliation
     
+
     # users
-    # path('api/users/', views.UserList.as_view()),
-    path('api/users/', views.UserSQLList),
-    # path('api/users/<int:pk>', views.UserDetail.as_view()),
-    path('api/users/<int:id>', views.UserSQLDetail),
-    # path('api/users/searchemail/<slug:searchby>', views.UserSearchEmail.as_view()),
-    path('api/users/searchemail/<slug:search_term>', views.UserSQLSearchEmail),
-    path('api/users/searchemail/', views.UserSQLSearchEmailJson),
-    # path('api/users/searchaffiliation/<slug:searchby>', views.UserSearchAffiliation.as_view()),
-    path('api/users/searchaffiliation/<slug:search_term>', views.UserSQLSearchAffiliation),
-    path('api/users/searchaffiliation/', views.UserSQLSearchAffiliationJson),
+    path('api/users/', views.UserSQLList), # GET - returns ALL users, POST - creates new user
+
+    path('api/users/<int:id>', views.UserSQLDetail), # GET - returns user with id, PUT - updates user with id, DELETE - deletes user with id
+
+    path('api/users/searchemail/<str:search_term>', views.UserSQLSearchEmail), # GET - searches for users with term in email
+
+    path('api/users/searchaffiliation/<str:search_term>', views.UserSQLSearchAffiliation), # GET - searches for users with term in affiliation
+
 
     # publishers
-    path('api/publishers/', views.PublisherSQLList),
-    path('api/publishers/<int:id>', views.PublisherSQLDetail),
-    path('api/publishers/searchname/<slug:search_term>', views.PublisherSQLSearchName),
-    path('api/publishers/searchname/', views.PublisherSQLSearchNameJson),
+    path('api/publishers/', views.PublisherSQLList), # GET - returns ALL publishers, POST - creates new publisher
+
+    path('api/publishers/<int:id>', views.PublisherSQLDetail), # GET - returns publisher with id, PUT - updates publisher with id, DELETE - deletes publisher with id
+
+    path('api/publishers/searchname/<str:search_term>', views.PublisherSQLSearchName), # GET - searches for publishers with term in name
+
 
     # journals
-    path('api/journals/', views.JournalSQLList),
-    path('api/journals/<int:id>', views.JournalSQLDetail),
-    path('api/journals/searchname/<slug:search_term>', views.JournalSQLSearchName),
-    path('api/journals/searchname/', views.JournalSQLSearchNameJson),
+    path('api/journals/', views.JournalSQLList), # GET - returns ALL journals, POST - creates new journal
+
+    path('api/journals/<int:id>', views.JournalSQLDetail), # GET - returns journal with id, PUT - updates journal with id, DELETE - deletes journal with id
+
+    path('api/journals/searchname/<str:search_term>', views.JournalSQLSearchName), # GET - searches for journals with term in name
 
 
-    # path('api/articlessql/', views.ArticleSQLList),
-    # path('api/articlessqldetail/<int:id>', views.ArticleSQLDetail),
-    # path('api/articlessql/searchtitle/<slug:search_term>', views.ArticleSQLSearchTitle),
-    # path('api/articlessql/searchtitle/', views.ArticleSQLSearchTitleJson),
-    # path('api/articlessql/searchauthor/<slug:search_term>', views.ArticleSQLSearchAuthor),
-    # path('api/articlessql/searchauthor/', views.ArticleSQLSearchAuthorJson),
-    # path('api/authorssql/', views.AuthorSQLList),
-    # path('api/authorssqldetail/<int:id>', views.AuthorSQLDetail),
-    # path('api/authorssql/searchaffiliation/<slug:search_term>', views.AuthorSQLSearchAffiliation),
-    # path('api/authorssql/searchaffiliation/', views.AuthorSQLSearchAffiliationJson),
-    # path('api/authorssql/searchname/<slug:search_term>', views.AuthorSQLSearchName),
-    # path('api/authorssql/searchname/', views.AuthorSQLSearchNameJson),
-    # path('api/userssql/', views.UserSQLList),
-    # path('api/userssqldetail/<int:id>', views.UserSQLDetail),
-    # path('api/userssql/searchaffiliation/<slug:search_term>', views.UserSQLSearchAffiliation),
-    # path('api/userssql/searchaffiliation/', views.UserSQLSearchAffiliationJson),
-    # path('api/userssql/searchemail/<slug:search_term>', views.UserSQLSearchEmail),
-    # path('api/userssql/searchemail/', views.UserSQLSearchEmailJson),
-    # path('api/publisherssql/', views.PublisherSQLList),
-    # path('api/publisherssqldetail/<int:id>', views.PublisherSQLDetail),
-    # path('api/publisherssql/searchname/<slug:search_term>', views.PublisherSQLSearchName),
-    # path('api/publisherssql/searchname/', views.PublisherSQLSearchNameJson),
-    # path('api/journalssql/', views.JournalSQLList),
-    # path('api/journalssqldetail/<int:id>', views.JournalSQLDetail),
-    # path('api/journalssql/searchname/<slug:search_term>', views.JournalSQLSearchName),
-    # path('api/journalssql/searchname/', views.JournalSQLSearchNameJson),
+    # complex queries - joins, interesting statistics or both
+
+    # Representation of published_in table
+    # returns: int_1 = journals.id, str_1 = journals.name, int_2 = articles.id, str_2 = articles.title, str_3 = articles.authors
+    path('api/complex/articlesinjournal/<str:search_term>', views.ComplexSQLArticlesInJournal), # GET request
+
+    # Representation of published_by table
+    # returns: int_1 = publishers.id, str_1 = publishers.name, int_2 = articles.id, str_2 = articles.title, str_3 = articles.authors
+    path('api/complex/articlesfrompublisher/<str:search_term>', views.ComplexSQLArticlesFromPublisher), # GET request
+
+    # Computes all journals' average h-index based on the h-index of contributing authors
+    # returns: int_1 = journals.id, str_1 = journals.name, dec_1 = average h_index, int_2 = number of authors
+    path('api/complex/journalavghindex/', views.ComplexSQLJournalAvgHIndex), # GET request
+
+    # Computes all publishers' average h-index based on the h-index of contributing authors
+    # returns: int_1 = publishers.id, str_1 = publishers.name, dec_1 = average h_index, int_2 = number of authors
+    path('api/complex/publisheravghindex/', views.ComplexSQLPublisherAvgHIndex), # GET request
+
+    # Computes the number of journals a publisher has published
+    # returns: int_1 = publishers.id, str_1 = publishers.name, int_2 = number of journals
+    path('api/complex/publisherjournalspublished/', views.ComplexSQLPublisherJournalsPublished), # GET request
+
+    # Computes the number of journals an author has contributed to
+    # returns: int_1 = authors.id, str_1 = authors.name, int_2 = number of journals
+    path('api/complex/authorjournalspublishedin/', views.ComplexSQLAuthorJournalsPublishedIn), # GET request
+
+    # Computes citedby statistics for a journal (avg, total, num articles)
+    # returns: int_1 = journals.id, str_1 = journals.name, dec_1 = average citedby, int_2 = total citedby, int_3 = number of articles
+    path('api/complex/journalcitedbystats/', views.ComplexSQLJournalCitedbyStats), # GET request
+
+    # Computes citedby statistics for a publisher (avg, total, num articles)
+    # returns: int_1 = publishers.id, str_1 = publishers.name, dec_1 = average citedby, int_2 = total citedby, int_3 = number of articles
+    path('api/complex/publishercitedbystats/', views.ComplexSQLPublisherCitedbyStats),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
