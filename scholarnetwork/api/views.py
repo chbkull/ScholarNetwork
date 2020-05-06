@@ -4,7 +4,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import ArticleSQL, AuthorSQL, UserSQL, PublisherSQL, JournalSQL, ComplexSQL
 from .serializers import ArticleSQLSerializer, AuthorSQLSerializer, UserSQLSerializer, PublisherSQLSerializer, JournalSQLSerializer, ComplexSQLSerializer
-from .managers import RelationshipSQLManager
 
 
 @api_view(['GET', 'POST'])
@@ -51,31 +50,11 @@ def ArticleSQLSearchTitle(request, search_term, format=None):
         return Response(serializer.data)
 
 @api_view(['GET'])
-def ArticleSQLSearchTitleJson(request, format=None):
-    if request.method == 'GET':
-        if 'search_term' in request.data:
-            articles = ArticleSQL.objects.search_title(request.data['search_term'])
-            serializer = ArticleSQLSerializer(articles, many=True)
-            return Response(serializer.data)
-        else:
-            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
-
-@api_view(['GET'])
 def ArticleSQLSearchAuthor(request, search_term, format=None):
     if request.method == 'GET':
         articles = ArticleSQL.objects.search_author(search_term)
         serializer = ArticleSQLSerializer(articles, many=True)
         return Response(serializer.data)
-
-@api_view(['GET'])
-def ArticleSQLSearchAuthorJson(request, format=None):
-    if request.method == 'GET':
-        if 'search_term' in request.data:
-            articles = ArticleSQL.objects.search_author(request.data['search_term'])
-            serializer = ArticleSQLSerializer(articles, many=True)
-            return Response(serializer.data)
-        else:
-            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'POST'])
 def AuthorSQLList(request, format=None):
@@ -121,31 +100,11 @@ def AuthorSQLSearchAffiliation(request, search_term, format=None):
         return Response(serializer.data)
 
 @api_view(['GET'])
-def AuthorSQLSearchAffiliationJson(request, format=None):
-    if request.method == 'GET':
-        if 'search_term' in request.data:
-            authors = AuthorSQL.objects.search_affiliation(request.data['search_term'])
-            serializer = AuthorSQLSerializer(authors, many=True)
-            return Response(serializer.data)
-        else:
-            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
-
-@api_view(['GET'])
 def AuthorSQLSearchName(request, search_term, format=None):
     if request.method == 'GET':
         authors = AuthorSQL.objects.search_name(search_term)
         serializer = AuthorSQLSerializer(authors, many=True)
         return Response(serializer.data)
-
-@api_view(['GET'])
-def AuthorSQLSearchNameJson(request, format=None):
-    if request.method == 'GET':
-        if 'search_term' in request.data:
-            authors = AuthorSQL.objects.search_name(request.data['search_term'])
-            serializer = AuthorSQLSerializer(authors, many=True)
-            return Response(serializer.data)
-        else:
-            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'POST'])
 def UserSQLList(request, format=None):
@@ -191,31 +150,11 @@ def UserSQLSearchAffiliation(request, search_term, format=None):
         return Response(serializer.data)
 
 @api_view(['GET'])
-def UserSQLSearchAffiliationJson(request, format=None):
-    if request.method == 'GET':
-        if 'search_term' in request.data:
-            users = UserSQL.objects.search_affiliation(request.data['search_term'])
-            serializer = UserSQLSerializer(users, many=True)
-            return Response(serializer.data)
-        else:
-            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
-
-@api_view(['GET'])
 def UserSQLSearchEmail(request, search_term, format=None):
     if request.method == 'GET':
         users = UserSQL.objects.search_email(search_term)
         serializer = UserSQLSerializer(users, many=True)
         return Response(serializer.data)
-
-@api_view(['GET'])
-def UserSQLSearchEmailJson(request, format=None):
-    if request.method == 'GET':
-        if 'search_term' in request.data:
-            users = UserSQL.objects.search_email(request.data['search_term'])
-            serializer = UserSQLSerializer(users, many=True)
-            return Response(serializer.data)
-        else:
-            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'POST'])
 def PublisherSQLList(request, format=None):
@@ -260,16 +199,6 @@ def PublisherSQLSearchName(request, search_term, format=None):
         serializer = PublisherSQLSerializer(publishers, many=True)
         return Response(serializer.data)
 
-@api_view(['GET'])
-def PublisherSQLSearchNameJson(request, format=None):
-    if request.method == 'GET':
-        if 'search_term' in request.data:
-            publishers = PublisherSQL.objects.search_name(request.data['search_term'])
-            serializer = PublisherSQLSerializer(publishers, many=True)
-            return Response(serializer.data)
-        else:
-            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
-
 @api_view(['GET', 'POST'])
 def JournalSQLList(request, format=None):
     if request.method == 'GET':
@@ -312,30 +241,6 @@ def JournalSQLSearchName(request, search_term, format=None):
         journals = JournalSQL.objects.search_name(search_term)
         serializer = JournalSQLSerializer(journals, many=True)
         return Response(serializer.data)
-
-@api_view(['GET'])
-def JournalSQLSearchNameJson(request, format=None):
-    if request.method == 'GET':
-        if 'search_term' in request.data:
-            journals = JournalSQL.objects.search_name(request.data['search_term'])
-            serializer = JournalSQLSerializer(journals, many=True)
-            return Response(serializer.data)
-        else:
-            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['POST'])
-def AddWrittenBy(request, format=None):
-    if request.method == 'POST':
-        if 'article_id' in request.data and 'author_id' in request.data:
-            article_id = request.data['article_id']
-            author_id = request.data['author_id']
-            RelationshipSQLManager.add_written_by(article_id, author_id)
-            return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-        else:
-            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
-        
-
 
 @api_view(['GET'])
 def ComplexSQLArticlesInJournal(request, search_term, format=None):
