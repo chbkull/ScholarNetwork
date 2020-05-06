@@ -9,10 +9,8 @@ urlpatterns = [
     path('api/articles/<int:id>', views.ArticleSQLDetail), # GET - returns article with id, PUT - updates article with id, DELETE - deletes article with id
 
     path('api/articles/searchtitle/<str:search_term>', views.ArticleSQLSearchTitle), # GET - searches for articles with term in title
-    # path('api/articles/searchtitle/', views.ArticleSQLSearchTitleJson),
 
     path('api/articles/searchauthor/<str:search_term>', views.ArticleSQLSearchAuthor), # GET - searches for articles with term in author name
-    # path('api/articles/searchauthor/', views.ArticleSQLSearchAuthorJson),
     
 
     # authors
@@ -21,10 +19,8 @@ urlpatterns = [
     path('api/authors/<int:id>', views.AuthorSQLDetail), # GET - returns author with id, PUT - updates author with id, DELETE - deletes author with id
 
     path('api/authors/searchname/<str:search_term>', views.AuthorSQLSearchName), # GET - searches for authors with term in name
-    # path('api/authors/searchname/', views.AuthorSQLSearchNameJson),
 
     path('api/authors/searchaffiliation/<str:search_term>', views.AuthorSQLSearchAffiliation), # GET - searches for authors with term in affiliation
-    # path('api/authors/searchaffiliation/', views.AuthorSQLSearchAffiliationJson),
     
 
     # users
@@ -33,10 +29,8 @@ urlpatterns = [
     path('api/users/<int:id>', views.UserSQLDetail), # GET - returns user with id, PUT - updates user with id, DELETE - deletes user with id
 
     path('api/users/searchemail/<str:search_term>', views.UserSQLSearchEmail), # GET - searches for users with term in email
-    # path('api/users/searchemail/', views.UserSQLSearchEmailJson),
 
     path('api/users/searchaffiliation/<str:search_term>', views.UserSQLSearchAffiliation), # GET - searches for users with term in affiliation
-    # path('api/users/searchaffiliation/', views.UserSQLSearchAffiliationJson),
 
 
     # publishers
@@ -45,7 +39,6 @@ urlpatterns = [
     path('api/publishers/<int:id>', views.PublisherSQLDetail), # GET - returns publisher with id, PUT - updates publisher with id, DELETE - deletes publisher with id
 
     path('api/publishers/searchname/<str:search_term>', views.PublisherSQLSearchName), # GET - searches for publishers with term in name
-    # path('api/publishers/searchname/', views.PublisherSQLSearchNameJson),
 
 
     # journals
@@ -54,11 +47,6 @@ urlpatterns = [
     path('api/journals/<int:id>', views.JournalSQLDetail), # GET - returns journal with id, PUT - updates journal with id, DELETE - deletes journal with id
 
     path('api/journals/searchname/<str:search_term>', views.JournalSQLSearchName), # GET - searches for journals with term in name
-    # path('api/journals/searchname/', views.JournalSQLSearchNameJson),
-
-    
-    # relationships
-    path('api/writtenby/', views.AddWrittenBy), # POST - creates a new writtenby relationship
 
 
     # complex queries - joins, interesting statistics or both

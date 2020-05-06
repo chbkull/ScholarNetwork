@@ -603,21 +603,6 @@ class JournalSQLManager():
         
         return JournalSQLManager.extract_journals(cursor)
 
-class RelationshipSQLManager():
-
-    @staticmethod
-    def add_written_by(article_id, author_id):
-        cursor = connection.cursor()
-        query = """
-            INSERT INTO written_by (article_id, author_id)
-            VALUES ('{0}', '{1}');
-        """.format(
-            article_id, author_id
-        )
-
-        cursor.execute(query)
-
-
 class ComplexSQLManager():
 
     @staticmethod
