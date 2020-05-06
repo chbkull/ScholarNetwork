@@ -1,7 +1,7 @@
 import React, { Component,Fragment } from 'react';
 import {getAuthorByID, insertAuthor, deleteAuthorByID, updateAuthorByID} from '../action/author';
 import 'regenerator-runtime/runtime';
-// import { VictoryBar,VictoryChart,VictoryAxis, VictoryTheme } from 'victory';
+import { VictoryBar,VictoryChart,VictoryAxis, VictoryTheme } from 'victory';
 import Form from './Form';
 import Alert from './Alert';
 
@@ -63,8 +63,8 @@ export class AuthorDetail extends Component {
         h_index_5:res.data[0].h_index_5,
         i10_index:res.data[0].i10_index,
         i10_index_5:res.data[0].i10_index_5,
-        // citedby_history:res.data[0].citedby_history,
-        citedby_history:'{"1999":10, "2000":30, "2001":100}',
+        citedby_history:res.data[0].citedby_history,
+        // citedby_history:'{"1999":10, "2000":30, "2001":100}',
         page:res.data[0].page,
         email: res.data[0].email,
         interests :res.data[0].interests,
@@ -89,11 +89,11 @@ export class AuthorDetail extends Component {
 
       mdl =(
       <Fragment>
-        {/* <VictoryChart theme={VictoryTheme.grayscale} domainPadding={20} >
+        <VictoryChart theme={VictoryTheme.grayscale} domainPadding={20} >
           <VictoryAxis tickValues={axis_y} tickFormat={axis_x}/>
           <VictoryAxis dependentAxis tickFormat={(x) => (`${x}`)}/>
           <VictoryBar data= {arr} x="year" y="citations" labels={axis_y} />
-        </VictoryChart> */}
+        </VictoryChart>
         <table className="table table-hover">
           <thead>
             <tr>

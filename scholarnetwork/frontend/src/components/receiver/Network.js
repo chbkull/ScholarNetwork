@@ -33,7 +33,7 @@ export default class Network extends Component {
         relationships: {
 
         },
-        initial_cypher: ""
+        initial_cypher: "MATCH (m:Authors) RETURN m LIMIT 20"
     }
 
     var tmp = new NeoVis.default(config);
@@ -50,6 +50,9 @@ export default class Network extends Component {
         tmp = "please input author name";
         break;
       case "recommendation":
+        tmp = "please input interests";
+        break;
+      case "interests":
         tmp = "please input interests";
         break;
       default:
@@ -74,13 +77,15 @@ export default class Network extends Component {
         break;
       case "recommendation":
           cypher = "MATCH(n:Authors) UNWIND n.interests AS INTERS WITH n AS auth, INTERS AS INTYS WHERE trim(toUpper(INTYS)) = trim(\'"+content+"\') MATCH p = (auth)-[:WROTE]->(:articles)-[:PUBLISHED_IN]->(j:journals) RETURN p LIMIT 100";
+          // cypher = "MATCH(n:Authors) UNWIND n.interests AS INTERS WITH n AS auth, INTERS AS INTYS WHERE trim(toUpper(INTYS)) = trim(\'"+content+"\') MATCH p = (auth)-[:WROTE]->(:articles) RETURN p LIMIT 100";
           break;
-      // case "interest":
-      //   cypher = "MATCH(n:Authors) UNWIND n.interests AS INTERS WITH n AS auth, INTERS AS INTYS WHERE trim(toUpper(INTYS)) = trim(\'"+content+"\') MATCH p = (auth)-[:WROTE]->(:articles) RETURN p LIMIT 100";
+      case "interests":
+        cypher = "MATCH(n:Authors) UNWIND n.interests AS INTERS WITH n AS auth, INTERS AS INTYS WHERE trim(toUpper(INTYS)) = trim(\'"+content+"\') MATCH p = (auth)-[:WROTE]->(:articles) RETURN p LIMIT 100";
+        break;
       default:
         cypher = "MATCH p = (m:Authors)-[:WROTE]->(n:articles)-[:PUBLISHED_IN]->(:journals) WHERE trim(toUpper(m.name)) = trim(\'"+content+"\') RETURN p"
     };
-
+    console.log(cypher);
     this.state.viz.renderWithCypher(cypher);
     this.setState({ content: ""});
 
@@ -124,6 +129,19 @@ export default class Network extends Component {
                 onChange={this.onCheck}
               />
               Find authors, articles and journals you may be interested in
+            </label>
+          </div>
+          <div className="form-check">
+            <label className="form-check-label">
+              <input
+                type="radio"
+                className="form-check-input"
+                name="optionsRadios"
+                id="optionsRadios4"
+                value="interests"
+                onChange={this.onCheck}
+              />
+             Find authors and articles based on interests
             </label>
           </div>
           <div className="form-check">
