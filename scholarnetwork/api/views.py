@@ -2,8 +2,9 @@ from django.http import HttpResponse
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import ArticleSQL, AuthorSQL, UserSQL, PublisherSQL, JournalSQL
-from .serializers import ArticleSQLSerializer, AuthorSQLSerializer, UserSQLSerializer, PublisherSQLSerializer, JournalSQLSerializer
+from .models import ArticleSQL, AuthorSQL, UserSQL, PublisherSQL, JournalSQL, ComplexSQL
+from .serializers import ArticleSQLSerializer, AuthorSQLSerializer, UserSQLSerializer, PublisherSQLSerializer, JournalSQLSerializer, ComplexSQLSerializer
+from .managers import RelationshipSQLManager
 
 
 @api_view(['GET', 'POST'])
@@ -321,3 +322,73 @@ def JournalSQLSearchNameJson(request, format=None):
             return Response(serializer.data)
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def AddWrittenBy(request, format=None):
+    if request.method == 'POST':
+        if 'article_id' in request.data and 'author_id' in request.data:
+            article_id = request.data['article_id']
+            author_id = request.data['author_id']
+            RelationshipSQLManager.add_written_by(article_id, author_id)
+            return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        
+
+
+@api_view(['GET'])
+def ComplexSQLArticlesInJournal(request, search_term, format=None):
+    if request.method == 'GET':
+        results = ComplexSQL.objects.articles_in_journal(search_term)
+        serializer = ComplexSQLSerializer(results, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def ComplexSQLArticlesFromPublisher(request, search_term, format=None):
+    if request.method == 'GET':
+        results = ComplexSQL.objects.articles_from_publisher(search_term)
+        serializer = ComplexSQLSerializer(results, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def ComplexSQLJournalAvgHIndex(request, format=None):
+    if request.method == 'GET':
+        results = ComplexSQL.objects.journal_avg_h_index()
+        serializer = ComplexSQLSerializer(results, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def ComplexSQLPublisherAvgHIndex(request, format=None):
+    if request.method == 'GET':
+        results = ComplexSQL.objects.publisher_avg_h_index()
+        serializer = ComplexSQLSerializer(results, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def ComplexSQLPublisherJournalsPublished(request, format=None):
+    if request.method == 'GET':
+        results = ComplexSQL.objects.publisher_journals_published()
+        serializer = ComplexSQLSerializer(results, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def ComplexSQLAuthorJournalsPublishedIn(request, format=None):
+    if request.method == 'GET':
+        results = ComplexSQL.objects.author_journals_published_in()
+        serializer = ComplexSQLSerializer(results, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def ComplexSQLJournalCitedbyStats(request, format=None):
+    if request.method == 'GET':
+        results = ComplexSQL.objects.journal_citedby_stats()
+        serializer = ComplexSQLSerializer(results, many=True)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def ComplexSQLPublisherCitedbyStats(request, format=None):
+    if request.method == 'GET':
+        results = ComplexSQL.objects.publisher_citedby_stats()
+        serializer = ComplexSQLSerializer(results, many=True)
+        return Response(serializer.data)

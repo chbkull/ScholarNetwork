@@ -80,8 +80,7 @@ class ArticleSQLManager():
         cursor = connection.cursor()
         query = """
             SELECT id, name, affiliation, citedby, pub_title, pub_year, citations, pub_author, eprint
-            FROM articles
-            LIMIT 10;
+            FROM articles;
         """
 
         cursor.execute(query)
@@ -218,8 +217,7 @@ class AuthorSQLManager():
         cursor = connection.cursor()
         query = """
             SELECT id, name, affiliation, citedby, citedby_5, h_index, h_index_5, i10_index, i10_index_5, citedby_history, page, email, interests, url_picture
-            FROM authors
-            LIMIT 10;
+            FROM authors;
         """
 
         cursor.execute(query)
@@ -344,8 +342,7 @@ class UserSQLManager():
         cursor = connection.cursor()
         query = """
             SELECT id, email, password, affiliation, history, interests
-            FROM users
-            LIMIT 10;
+            FROM users;
         """
 
         cursor.execute(query)
@@ -466,8 +463,7 @@ class PublisherSQLManager():
         cursor = connection.cursor()
         query = """
             SELECT id, name
-            FROM publishers
-            LIMIT 10;
+            FROM publishers;
         """
 
         cursor.execute(query)
@@ -572,8 +568,7 @@ class JournalSQLManager():
         cursor = connection.cursor()
         query = """
             SELECT id, name
-            FROM journals
-            LIMIT 10;
+            FROM journals;
         """
 
         cursor.execute(query)
@@ -607,3 +602,294 @@ class JournalSQLManager():
         cursor.execute(query)
         
         return JournalSQLManager.extract_journals(cursor)
+
+class RelationshipSQLManager():
+
+    @staticmethod
+    def add_written_by(article_id, author_id):
+        cursor = connection.cursor()
+        query = """
+            INSERT INTO written_by (article_id, author_id)
+            VALUES ('{0}', '{1}');
+        """.format(
+            article_id, author_id
+        )
+
+        cursor.execute(query)
+
+
+class ComplexSQLManager():
+
+    @staticmethod
+    def empty_object():
+        from .models import ComplexSQL
+        c = ComplexSQL()
+        c.str_1 = ""
+        c.str_2 = ""
+        c.str_3 = ""
+        c.str_4 = ""
+        c.str_5 = ""
+        c.str_6 = ""
+        c.str_7 = ""
+        c.str_8 = ""
+        c.int_1 = -1
+        c.int_2 = -1
+        c.int_3 = -1
+        c.int_4 = -1
+
+        return c
+    
+    @staticmethod
+    def articles_in_journal(search_term):
+        cursor = connection.cursor()
+        query = """
+            SELECT journals.id, journals.name, articles.id, articles.pub_title, articles.pub_author
+            FROM journals
+            INNER JOIN published_in
+            ON journals.id = published_in.journal_id
+            INNER JOIN articles
+            ON published_in.article_id = articles.id
+            WHERE journals.name LIKE "%{0}%";
+        """.format(
+            search_term
+        )
+
+        cursor.execute(query)
+
+        results = []
+        from .models import ComplexSQL
+
+        for row in cursor.fetchall():
+            c = ComplexSQL()
+            c.int_1 = row[0] # journals.id
+            c.str_1 = row[1] # journals.name
+            c.int_2 = row[2] # articles.id
+            c.str_2 = row[3] # articles.pub_title
+            c.str_3 = row[4] # articles.pub_author
+            results.append(c)
+
+        return results
+    
+    @staticmethod
+    def articles_from_publisher(search_term):
+        cursor = connection.cursor()
+        query = """
+            SELECT publishers.id, publishers.name, articles.id, articles.pub_title, articles.pub_author
+            FROM publishers
+            INNER JOIN published_by
+            ON publishers.id = published_by.publisher_id
+            INNER JOIN articles
+            ON published_by.article_id = articles.id
+            WHERE publishers.name LIKE "%{0}%";
+        """.format(
+            search_term
+        )
+
+        cursor.execute(query)
+
+        results = []
+        from .models import ComplexSQL
+
+        for row in cursor.fetchall():
+            c = ComplexSQL()
+            c.int_1 = row[0] # publishers.id
+            c.str_1 = row[1] # publishers.name
+            c.int_2 = row[2] # articles.id
+            c.str_2 = row[3] # articles.pub_title
+            c.str_3 = row[4] # articles.pub_author
+            results.append(c)
+
+        return results
+    
+    @staticmethod
+    def journal_avg_h_index():
+        cursor = connection.cursor()
+        query = """
+            SELECT journals.id, journals.name, AVG(authors.h_index) as average_h_index, COUNT(authors.name) as author_count
+            FROM journals
+            INNER JOIN published_in
+            ON journals.id = published_in.journal_id
+            INNER JOIN articles
+            ON published_in.article_id = articles.id
+            INNER JOIN written_by
+            ON articles.id = written_by.article_id
+            INNER JOIN authors
+            ON written_by.author_id = authors.id
+            GROUP BY journals.id
+            HAVING author_count >= 20
+            ORDER BY average_h_index DESC;
+        """
+
+        cursor.execute(query)
+
+        results = []
+        from .models import ComplexSQL
+
+        for row in cursor.fetchall():
+            c = ComplexSQL()
+            c.int_1 = row[0] # journals.id
+            c.str_1 = row[1] # journals.name
+            c.dec_1 = row[2] # average h_index
+            c.int_2 = row[3] # number of authors
+            results.append(c)
+
+        return results
+    
+    @staticmethod
+    def publisher_avg_h_index():
+        cursor = connection.cursor()
+        query = """
+            SELECT publishers.id, publishers.name, AVG(authors.h_index) as average_h_index, COUNT(authors.name) as author_count
+            FROM publishers
+            INNER JOIN published_by
+            ON publishers.id = published_by.publisher_id
+            INNER JOIN articles
+            ON published_by.article_id = articles.id
+            INNER JOIN written_by
+            ON articles.id = written_by.article_id
+            INNER JOIN authors
+            ON written_by.author_id = authors.id
+            GROUP BY publishers.id
+            HAVING author_count >= 30
+            ORDER BY average_h_index DESC;
+        """
+
+        cursor.execute(query)
+
+        results = []
+        from .models import ComplexSQL
+
+        for row in cursor.fetchall():
+            c = ComplexSQL()
+            c.int_1 = row[0] # publishers.id
+            c.str_1 = row[1] # publishers.name
+            c.dec_1 = row[2] # average h_index
+            c.int_2 = row[3] # number of authors
+            results.append(c)
+
+        return results
+    
+    @staticmethod
+    def publisher_journals_published():
+        cursor = connection.cursor()
+        query = """
+            SELECT publishers.id, publishers.name, COUNT(DISTINCT published_in.journal_id) as journal_count FROM publishers
+            INNER JOIN published_by
+            ON publishers.id = published_by.publisher_id
+            INNER JOIN articles
+            ON published_by.article_id = articles.id
+            INNER JOIN published_in
+            ON articles.id = published_in.article_id
+            GROUP BY publishers.id
+            ORDER BY journal_count DESC;
+        """
+
+        cursor.execute(query)
+
+        results = []
+        from .models import ComplexSQL
+
+        for row in cursor.fetchall():
+            c = ComplexSQL()
+            c.int_1 = row[0] # publishers.id
+            c.str_1 = row[1] # publishers.name
+            c.int_2 = row[2] # number of journals
+            results.append(c)
+
+        return results
+    
+    @staticmethod
+    def author_journals_published_in():
+        cursor = connection.cursor()
+        query = """
+            SELECT author_id, author_name, COUNT(journal_name) as journal_count FROM (
+                SELECT DISTINCT authors.id as author_id, articles.name as author_name, journals.name as journal_name 
+                FROM articles
+                INNER JOIN published_in
+                ON articles.id = published_in.article_id
+                INNER JOIN journals
+                ON published_in.journal_id = journals.id
+                INNER JOIN written_by
+                ON articles.id = written_by.article_id
+                INNER JOIN authors
+                ON written_by.author_id = authors.id
+            ) as subquery
+            GROUP BY author_name
+            ORDER BY journal_count DESC;
+        """
+
+        cursor.execute(query)
+
+        results = []
+        from .models import ComplexSQL
+
+        for row in cursor.fetchall():
+            c = ComplexSQL()
+            c.int_1 = row[0] # authors.id
+            c.str_1 = row[1] # articles.name (note this is the same as authors.name)
+            c.int_2 = row[2] # number of journals
+            results.append(c)
+
+        return results
+
+    @staticmethod
+    def journal_citedby_stats():
+        cursor = connection.cursor()
+        query = """
+            SELECT journals.id, journals.name, AVG(articles.citedby) as avg_citedby, SUM(articles.citedby) as total_citedby, COUNT(articles.id) as article_count
+            FROM journals
+            INNER JOIN published_in
+            ON journals.id = published_in.journal_id
+            INNER JOIN articles
+            ON published_in.article_id = articles.id
+            GROUP BY journals.id
+            HAVING article_count >= 20
+            ORDER BY avg_citedby DESC;
+        """
+
+        cursor.execute(query)
+
+        results = []
+        from .models import ComplexSQL
+
+        for row in cursor.fetchall():
+            c = ComplexSQL()
+            c.int_1 = row[0] # journals.id
+            c.str_1 = row[1] # journals.name
+            c.dec_1 = row[2] # average citedby
+            c.int_2 = row[3] # total citedby
+            c.int_3 = row[4] # number of articles
+            results.append(c)
+
+        return results
+    
+    @staticmethod
+    def publisher_citedby_stats():
+        cursor = connection.cursor()
+        query = """
+            SELECT publishers.id, publishers.name, AVG(articles.citedby) as avg_citedby, SUM(articles.citedby) as total_citedby, COUNT(articles.id) as article_count
+            FROM publishers
+            INNER JOIN published_by
+            ON publishers.id = published_by.publisher_id
+            INNER JOIN articles
+            ON published_by.article_id = articles.id
+            GROUP BY publishers.id
+            HAVING article_count >= 20
+            ORDER BY avg_citedby DESC;
+        """
+
+        cursor.execute(query)
+
+        results = []
+        from .models import ComplexSQL
+
+        for row in cursor.fetchall():
+            c = ComplexSQL()
+            c.int_1 = row[0] # publishers.id
+            c.str_1 = row[1] # publishers.name
+            c.dec_1 = row[2] # average citedby
+            c.int_2 = row[3] # total citedby
+            c.int_3 = row[4] # number of articles
+            results.append(c)
+
+        return results
