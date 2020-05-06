@@ -4,6 +4,8 @@ import React, { Component, Fragment } from "react";
 import { getArticleByTitle, getArticleByAuthor } from "../action/article";
 import 'regenerator-runtime/runtime';
 import ArticleDetail from '../modular/ArticleDetail';
+import Form from '../modular/Form';
+import { async } from "regenerator-runtime/runtime";
 
 export class Article extends Component {
 
@@ -14,97 +16,111 @@ export class Article extends Component {
     status:"",
     message:"",
     id:"",
+    operation:"",
   };
 
-  setID = (i) => {
-    this.setState({ id: i }, () => {
-      console.log(this.state);
+  clear = async()=>{
+    this.setState({
+      content: "",
+      result: [],
+      status:"",
+      message:"",
+      id:"",
+      operation:"",
     });
+  }
+
+
+  prop_setState = async(target, value)=>{
+    await this.setState({[target]:value});
+  }
+
+
+  onCheck = async(e) => {
+
+    await this.setState({ selector: e.target.value });
   };
 
-  onCheck = (e) => {
-    console.log(this.state);
-    this.setState({ selector: e.target.value }, () => {
-      console.log(this.state);
-    });
-  };
 
-  // form on changes
-  onChange = (e) => {
-    this.setState({ content: e.target.value }, () => {
-      console.log(this.state);
-    });
-  };
 
   onSubmit = async (e) => {
-    e.preventDefault();
-    const name = this.state.selector;
-    var msg = "";
-    var s = "";
-    var req = this.state;
-    var res = { data:[], msg:"" };
 
-    if (name === "author") await getArticleByAuthor(req,res);
-    if (name === "pub_title") await getArticleByTitle(req,res);
-    s  = (res.msg === "server error" ? "fail" : "succeed");
-    msg = res.msg;
-    this.setState({ result: res.data , status: s, message:msg}, () => {
-      console.log(this.state.result);
-    });
+    if (e.target.name === "search"){
+      const name = this.state.selector;
+      var msg = "";
+      var s = "";
+      var req = this.state;
+      var res = { data:[], msg:"" };
+
+      if (name === "author") await getArticleByAuthor(req,res);
+      if (name === "pub_title") await getArticleByTitle(req,res);
+      s  = (res.msg === "server error" ? "fail" : "succeed");
+      msg = res.msg;
+      this.setState({ result: res.data , status: s, message:msg, content:"", operation:"search"}, () => {
+        console.log(this.state.result);
+      });
+    }
+    else{
+      await this.setState({ id :"",operation:"insert",content:"", result:[]});
+    }
   };
 
-  onClick = (e)=>{
-
-    this.setState({ id: e.target.value }, () => {
-      console.log(this.state);
-    });
-
+  onClick = async(e)=>{
+    await this.setState({ id: e.target.value });
   }
 
 
   render() {
 
-    const results = this.state.result;
+    var body = <Fragment></Fragment>;
+    var table = <Fragment></Fragment>;
 
-    const module = results.map((entry) => {
 
-      var button = <Fragment></Fragment>;
-      if (!entry.eprint) {
-
-        button = (
-          <button type="button" className= "btn btn-outline-info" >
-             <a href= {entry.eprint}>Click</a>
-            </button>
+    if (this.state.operation === "search"){
+      const results = this.state.result;
+      body = results.map((entry) => {
+        return (
+            <tr className="table-light">
+              <th scope="row"  >
+                <button type="button" className="btn btn-link" value = {entry.id} onClick={this.onClick}>{entry.title}</button>
+              </th>
+              <td>{entry.authors}</td>
+              <td>{entry.citations}</td>
+              <td>{entry.year}</td>
+            </tr>
         );
-      }
+      });
+      table = (<table className="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">title</th>
+          <th scope="col">authors</th>
+          <th scope="col">citations</th>
+          <th scope="col">year</th>
+        </tr>
+      </thead>
+      <tbody>{body}</tbody>
+    </table>);
 
-      return (
-        <Fragment>
-          <tr className="table-light">
-            <th scope="row"  >
-              <button type="button" className="btn btn-link" value = {entry.id} onClick={this.onClick}>{entry.pub_title}</button>
-            </th>
-            {/* <td>{entry.name}</td>
-            <td>{entry.affiliation}</td> */}
-            <td>{entry.pub_year}</td>
-            <td>{entry.citations}</td>
-            <td>{entry.pub_author}</td>
-            <td>{button}</td>
-          </tr>
-        </Fragment>
-      );
-    });
-
-    var detail = <Fragment></Fragment>;
-    if (this.state.id !== ""){
-
-      detail =  <ArticleDetail article ={this.state.id} setID = {this.setID }/>
     }
 
+    var detail = <Fragment></Fragment>;
+
+
+    if (this.state.operation === "insert" || this.state.id !== ""){
+      console.log("id",this.state.id);
+      detail =  <ArticleDetail article ={this.state.id}  clear={this.clear} operation ={this.state.operation} />;
+    }
+
+    var data = {
+      content:this.state.content,
+    }
+
+
     return (
+      <Fragment>
       <div className="card card-body mt-4 mb-4">
         <h2> Article CRUD</h2>
-        {detail}
         <fieldset className="form-group">
           <legend>Key Word</legend>
           <div className="form-check">
@@ -134,38 +150,23 @@ export class Article extends Component {
             </label>
           </div>
         </fieldset>
-        <form onSubmit={this.onSubmit}>
-          <div className="form-group">
-            <label>content</label>
-            <input
-              className="form-control"
-              type="content"
-              name="content"
-              onChange={this.onChange}
-              value={this.state.content}
-            />
-          </div>
-          <div className="form-group">
-            <button type="submit" className="btn btn-primary">
-              Search
-            </button>
-          </div>
-        </form>
-        <table className="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">pub_title</th>
-              {/* <th scope="col">name</th>
-              <th scope="col">affiliation</th> */}
-              <th scope="col">pub_year</th>
-              <th scope="col">citations</th>
-              <th scope="col">pub_author</th>
-              <th scope="col">eprint</th>
-            </tr>
-          </thead>
-          <tbody>{module}</tbody>
-        </table>
+
+        <Form prop_setState ={this.prop_setState} data = {data} />
+
+
+        <div className="form-group">
+          <button type="submit" className="btn btn-primary" onClick={this.onSubmit} name="search">
+            Search
+          </button>
+          <button type="submit" className="btn btn-primary" onClick={this.onSubmit} name="insert">
+            Insert
+          </button>
+        </div>
+        {table}
+        {detail}
       </div>
+      </Fragment>
+
     );
   }
 }

@@ -1,9 +1,6 @@
 import React, { Component, Fragment } from "react";
 import ReactDOM from "react-dom";
-import { HashRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-
-// import { Provider as AlertProvider } from 'react-alert';
-// import AlertTemplate from 'react-alert-template-basic';
+import { HashRouter as Router, Route, Switch} from "react-router-dom";
 
 import Header from "./layout/Header";
 import Login from "./receiver/Login";
@@ -12,13 +9,13 @@ import Article from "./receiver/Article";
 import Author from "./receiver/Author";
 import Showcase from "./layout/Showcase";
 import Network from "./receiver/Network";
-
-
+import Complex  from "./receiver/Complex";
+import Journal from "./receiver/Journal";
+import Publisher from "./receiver/Publisher";
 class App extends Component {
   state = {
     id:"",
-    // article:"",
-    // author:"",
+
   };
 
   setUser = (i) => {
@@ -89,7 +86,25 @@ class App extends Component {
                   <Article/>
                   </Fragment>
                 }/>
+              <Route exact path="/journal" render={(props) =>
+                <Fragment>
+                  <Header />
+                  <Journal/>
+                  </Fragment>
+                }/>
+             <Route exact path="/publisher" render={(props) =>
+                <Fragment>
+                  <Header />
+                  <Publisher/>
+                  </Fragment>
+                }/>
 
+              <Route exact path="/complex" render={(props) =>
+                <Fragment>
+                  <Header />
+                  <Complex/>
+                  </Fragment>
+                }/>
 
               <Route exact path="/network" render={(props) =>
                 <Fragment>
