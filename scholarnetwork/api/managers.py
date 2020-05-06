@@ -151,8 +151,7 @@ class ArticleSQLManager():
         cursor = connection.cursor()
         query = """
             SELECT id, title, author_id, authors, citations, journal_id, year, issue, publisher_id, eprint, url
-            FROM articles
-            LIMIT 10;
+            FROM articles;
         """
 
         cursor.execute(query)
@@ -179,7 +178,8 @@ class ArticleSQLManager():
         query = """
             SELECT id, title, author_id, authors, citations, journal_id, year, issue, publisher_id, eprint, url
             FROM articles
-            WHERE title LIKE '%{0}%';
+            WHERE title LIKE '%{0}%'
+            LIMIT 20;
         """.format(
             search_term
         )
@@ -194,7 +194,8 @@ class ArticleSQLManager():
         query = """
             SELECT id, title, author_id, authors, citations, journal_id, year, issue, publisher_id, eprint, url
             FROM articles
-            WHERE authors LIKE '%{0}%';
+            WHERE authors LIKE '%{0}%'
+            LIMIT 20;
         """.format(
             search_term
         )
@@ -315,7 +316,8 @@ class AuthorSQLManager():
         query = """
             SELECT id, name, affiliation, citedby, citedby_5, h_index, h_index_5, i10_index, i10_index_5, citedby_history, page, email, interests, url_picture
             FROM authors
-            WHERE affiliation LIKE '%{0}%';
+            WHERE affiliation LIKE '%{0}%'
+            LIMIT 20;
         """.format(
             search_term
         )
@@ -330,7 +332,8 @@ class AuthorSQLManager():
         query = """
             SELECT id, name, affiliation, citedby, citedby_5, h_index, h_index_5, i10_index, i10_index_5, citedby_history, page, email, interests, url_picture
             FROM authors
-            WHERE name LIKE '%{0}%';
+            WHERE name LIKE '%{0}%'
+            LIMIT 20;
         """.format(
             search_term
         )
@@ -440,7 +443,8 @@ class UserSQLManager():
         query = """
             SELECT id, email, password, affiliation, history, interests
             FROM users
-            WHERE affiliation LIKE '%{0}%';
+            WHERE affiliation LIKE '%{0}%'
+            LIMIT 20;
         """.format(
             search_term
         )
@@ -455,7 +459,8 @@ class UserSQLManager():
         query = """
             SELECT id, email, password, affiliation, history, interests
             FROM users
-            WHERE email = '{0}';
+            WHERE email = '{0}'
+            LIMIT 20;
         """.format( # was WHERE email = '{0}' WHERE email LIKE '%{0}%'
             search_term
         )
@@ -561,7 +566,8 @@ class PublisherSQLManager():
         query = """
             SELECT id, name
             FROM publishers
-            WHERE name LIKE '%{0}%';
+            WHERE name LIKE '%{0}%'
+            LIMIT 20;
         """.format(
             search_term
         )
@@ -666,7 +672,8 @@ class JournalSQLManager():
         query = """
             SELECT id, name
             FROM journals
-            WHERE name LIKE '%{0}%';
+            WHERE name LIKE '%{0}%'
+            LIMIT 20;
         """.format(
             search_term
         )
