@@ -2,17 +2,17 @@ CREATE TABLE articles (
 	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     title TEXT,
     author_id INT,
-    FOREIGN KEY (author_id) REFERENCES authors(id) ON UPDATE CASCADE ON DELETE SET NULL,
     authors TEXT,
     citations INT,
     journal_id INT,
-    FOREIGN KEY (journal_id) REFERENCES journals(id) ON UPDATE CASCADE ON DELETE SET NULL,
-    year YEAR,
+    year INT,
     issue TEXT,
     publisher_id INT,
-    FOREIGN KEY(publisher_id) REFERENCES publishers(id) ON UPDATE CASCADE ON DELETE SET NULL,
     eprint TEXT,
-    url TEXT
+    url TEXT,
+    FOREIGN KEY (author_id) REFERENCES authors(id) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (journal_id) REFERENCES journals(id) ON UPDATE CASCADE ON DELETE SET NULL,
+    FOREIGN KEY (publisher_id) REFERENCES publishers(id) ON UPDATE CASCADE ON DELETE SET NULL
 );
 
 INSERT INTO articles (

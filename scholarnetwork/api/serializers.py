@@ -4,46 +4,52 @@ from .models import ArticleSQL, AuthorSQL, UserSQL, PublisherSQL, JournalSQL, Co
 
 class ArticleSQLSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(required=False, default="", max_length=1024, allow_blank=True, allow_null=True)
-    affiliation = serializers.CharField(required=False, default="", max_length=1024, allow_blank=True, allow_null=True)
-    citedby = serializers.IntegerField(required=False, default=0)
-    pub_title = serializers.CharField(required=True, max_length=1024)
-    pub_year = serializers.IntegerField(required=False, default=0) # no year serializer?
-    citations = serializers.IntegerField(required=False, default=0)
-    pub_author = serializers.CharField(required=True, max_length=1024)
+    title = serializers.CharField(max_length=1024)
+    author_id = serializers.IntegerField(required=False, allow_null=True)
+    authors = serializers.CharField(max_length=1024)
+    citations = serializers.IntegerField(required=False, default=-1)
+    journal_id = serializers.IntegerField(required=False, allow_null=True)
+    year = serializers.IntegerField(required=False, default=-1) # no year serializer?
+    issue = serializers.CharField(required=False, default="", max_length=1024, allow_blank=True, allow_null=True)
+    publisher_id = serializers.IntegerField(required=False, allow_null=True)
     eprint = serializers.CharField(required=False, default="", max_length=1024, allow_blank=True, allow_null=True)
+    url = serializers.CharField(required=False, default="", max_length=1024, allow_blank=True, allow_null=True)
 
     def create(self, validated_data):
         a = ArticleSQL()
-        a.name = validated_data.get("name")
-        a.affiliation = validated_data.get("affiliation")
-        a.citedby = validated_data.get("citedby")
-        a.pub_title = validated_data.get("pub_title")
-        a.pub_year = validated_data.get("pub_year")
+        a.title = validated_data.get("title")
+        a.author_id = validated_data.get("author_id")
+        a.authors = validated_data.get("authors")
         a.citations = validated_data.get("citations")
-        a.pub_author = validated_data.get("pub_author")
+        a.journal_id = validated_data.get("journal_id")
+        a.year = validated_data.get("year")
+        a.issue = validated_data.get("issue")
+        a.publisher_id = validated_data.get("publisher_id")
         a.eprint = validated_data.get("eprint")
+        a.url = validated_data.get("url")
         a.save()
         a.id = ArticleSQL.objects.last_id()
         return a
     
     def update(self, a, validated_data):
         a = a[0]
-        a.name = validated_data.get("name", a.name)
-        a.affiliation = validated_data.get("affiliation", a.affiliation)
-        a.citedby = validated_data.get("citedby", a.citedby)
-        a.pub_title = validated_data.get("pub_title", a.pub_title)
-        a.pub_year = validated_data.get("pub_year", a.pub_year)
+        a.title = validated_data.get("title", a.title)
+        a.author_id = validated_data.get("author_id", a.author_id)
+        a.authors = validated_data.get("authors", a.authors)
         a.citations = validated_data.get("citations", a.citations)
-        a.pub_author = validated_data.get("pub_author", a.pub_author)
+        a.journal_id = validated_data.get("journal_id", a.journal_id)
+        a.year = validated_data.get("year", a.year)
+        a.issue = validated_data.get("issue", a.issue)
+        a.publisher_id = validated_data.get("publisher_id", a.publisher_id)
         a.eprint = validated_data.get("eprint", a.eprint)
+        a.url = validated_data.get("url", a.url)
         a.save()
         return a
 
 
 class AuthorSQLSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(required=True, max_length=1024)
+    name = serializers.CharField(max_length=1024)
     affiliation = serializers.CharField(required=False, default="", max_length=1024, allow_blank=True, allow_null=True)
     citedby = serializers.IntegerField(required=False, default=0)
     citedby_5 = serializers.IntegerField(required=False, default=0)
@@ -97,8 +103,8 @@ class AuthorSQLSerializer(serializers.Serializer):
 
 class UserSQLSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    email = serializers.CharField(required=True, max_length=255)
-    password = serializers.CharField(required=True, max_length=1024)
+    email = serializers.CharField(max_length=255)
+    password = serializers.CharField(max_length=1024)
     affiliation = serializers.CharField(required=False, default="", max_length=1024, allow_blank=True, allow_null=True)
     history = serializers.CharField(required=False, default="", max_length=1024, allow_blank=True, allow_null=True)
     interests = serializers.CharField(required=False, default="", max_length=1024, allow_blank=True, allow_null=True)
@@ -127,7 +133,7 @@ class UserSQLSerializer(serializers.Serializer):
 
 class PublisherSQLSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(required=True, max_length=512)
+    name = serializers.CharField(max_length=512)
 
     def create(self, validated_data):
         p = PublisherSQL()
@@ -145,7 +151,7 @@ class PublisherSQLSerializer(serializers.Serializer):
 
 class JournalSQLSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(required=True, max_length=512)
+    name = serializers.CharField(max_length=512)
 
     def create(self, validated_data):
         j = JournalSQL()
