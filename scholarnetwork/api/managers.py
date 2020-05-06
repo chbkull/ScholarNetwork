@@ -12,14 +12,16 @@ class ArticleSQLManager():
         for row in cursor.fetchall():
                 a = ArticleSQL()
                 a.id = row[0]
-                a.name = row[1]
-                a.affiliation = row[2]
-                a.citedby = row[3]
-                a.pub_title = row[4]
-                a.pub_year = row[5]
-                a.citations = row[6]
-                a.pub_author = row[7]
-                a.eprint = row[8]
+                a.title = row[1]
+                a.author_id = row[2]
+                a.authors = row[3]
+                a.citations = row[4]
+                a.journal_id = row[5]
+                a.year = row[6]
+                a.issue = row[7]
+                a.publisher_id = row[8]
+                a.eprint = row[9]
+                a.url = row[10]
                 articles.append(a)
 
         return articles        
@@ -27,20 +29,56 @@ class ArticleSQLManager():
     @staticmethod
     def insert(a):
         cursor = connection.cursor()
+
         query = """
-            INSERT INTO articles (name, affiliation, citedby, pub_title, pub_year, citations, pub_author, eprint)
-            VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}');
+            INSERT INTO articles (title, author_id, authors, citations, journal_id, year, issue, publisher_id, eprint, url)
+            VALUES ('{0}', NULL, '{1}', '{2}', NULL, '{3}', '{4}', NULL, '{5}', '{6}');
         """.format(
-            a.name, a.affiliation, a.citedby, a.pub_title, a.pub_year, a.citations, a.pub_author, a.eprint
+            a.title, a.authors, a.citations, a.year, a.issue, a.eprint, a.url
         )
 
         cursor.execute(query)
+
+        a.id = ArticleSQLManager.last_id()
+
+        if a.author_id is not None:
+        
+            query = """
+                UPDATE articles SET author_id={0}
+                WHERE id={1}
+            """.format(
+                a.author_id, a.id
+            )
+
+            cursor.execute(query)
+
+        if a.journal_id is not None:
+
+            query = """
+                UPDATE articles SET journal_id={0}
+                WHERE id={1}
+            """.format(
+                a.journal_id, a.id
+            )
+
+            cursor.execute(query)
+
+        if a.publisher_id is not None:
+
+            query = """
+                UPDATE articles SET publisher_id={0}
+                WHERE id={1}
+            """.format(
+                a.publisher_id, a.id
+            )
+
+            cursor.execute(query)
 
     @staticmethod
     def get(id):
         cursor = connection.cursor()
         query = """
-            SELECT id, name, affiliation, citedby, pub_title, pub_year, citations, pub_author, eprint
+            SELECT id, title, author_id, authors, citations, journal_id, year, issue, publisher_id, eprint, url
             FROM articles
             WHERE id={0};
         """.format(
@@ -57,16 +95,49 @@ class ArticleSQLManager():
     def update(a):
         cursor = connection.cursor()
         query = """
-            UPDATE articles SET name='{0}', affiliation='{1}', citedby='{2}', pub_title='{3}',
-                pub_year='{4}', citations='{5}', pub_author='{6}', eprint='{7}'
-            WHERE id={8};
+            UPDATE articles SET title='{0}', authors='{1}', citations='{2}',
+                year='{3}', issue='{4}', eprint='{5}', url='{6}'
+            WHERE id={7};
         """.format(
-            a.name, a.affiliation, a.citedby, a.pub_title,
-                a.pub_year, a.citations, a.pub_author, a.eprint,
+            a.title, a.authors, a.citations,
+                a.year, a.issue, a.eprint, a.url,
             a.id
         )
 
         cursor.execute(query)
+
+        if a.author_id is not None:
+        
+            query = """
+                UPDATE articles SET author_id={0}
+                WHERE id={1}
+            """.format(
+                a.author_id, a.id
+            )
+
+            cursor.execute(query)
+
+        if a.journal_id is not None:
+
+            query = """
+                UPDATE articles SET journal_id={0}
+                WHERE id={1}
+            """.format(
+                a.journal_id, a.id
+            )
+
+            cursor.execute(query)
+
+        if a.publisher_id is not None:
+
+            query = """
+                UPDATE articles SET publisher_id={0}
+                WHERE id={1}
+            """.format(
+                a.publisher_id, a.id
+            )
+
+            cursor.execute(query)
 
     @staticmethod
     def delete(a):
@@ -79,8 +150,9 @@ class ArticleSQLManager():
     def all():
         cursor = connection.cursor()
         query = """
-            SELECT id, name, affiliation, citedby, pub_title, pub_year, citations, pub_author, eprint
-            FROM articles;
+            SELECT id, title, author_id, authors, citations, journal_id, year, issue, publisher_id, eprint, url
+            FROM articles
+            LIMIT 10;
         """
 
         cursor.execute(query)
@@ -105,9 +177,9 @@ class ArticleSQLManager():
     def search_title(search_term):
         cursor = connection.cursor()
         query = """
-            SELECT id, name, affiliation, citedby, pub_title, pub_year, citations, pub_author, eprint
+            SELECT id, title, author_id, authors, citations, journal_id, year, issue, publisher_id, eprint, url
             FROM articles
-            WHERE pub_title LIKE '%{0}%';
+            WHERE title LIKE '%{0}%';
         """.format(
             search_term
         )
@@ -120,9 +192,9 @@ class ArticleSQLManager():
     def search_author(search_term):
         cursor = connection.cursor()
         query = """
-            SELECT id, name, affiliation, citedby, pub_title, pub_year, citations, pub_author, eprint
+            SELECT id, title, author_id, authors, citations, journal_id, year, issue, publisher_id, eprint, url
             FROM articles
-            WHERE pub_author LIKE '%{0}%';
+            WHERE authors LIKE '%{0}%';
         """.format(
             search_term
         )

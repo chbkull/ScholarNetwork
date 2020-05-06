@@ -7,14 +7,16 @@ class ArticleSQL():
     
     def __init__(self):
         self.id = None
-        self.name = None
-        self.affiliation = None
-        self.citedby = None
-        self.pub_title = None
-        self.pub_year = None
+        self.title = None
+        self.author_id = None
+        self.authors = None
         self.citations = None
-        self.pub_author = None
+        self.journal_id = None
+        self.year = None
+        self.issue = None
+        self.publisher_id = None
         self.eprint = None
+        self.url = None
     
     def save(self):
         if self.id is not None:
