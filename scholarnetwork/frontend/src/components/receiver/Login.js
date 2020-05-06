@@ -1,18 +1,14 @@
 // TODO
 
 import React, { Component, Fragment } from "react";
-import {PropTypes} from "prop-types";
-import { Link, Redirect } from "react-router-dom";
+import {Redirect } from "react-router-dom";
 import {insertUser, getUserByEmail} from "../action/user";
 import {Alert} from '../modular/Alert';
+import Form from '../modular/Form';
 import 'regenerator-runtime/runtime';
-// import { async } from "regenerator-runtime/runtime";
-// import getUserByEmail from "../action/user";
 
 export class Login extends Component {
   // Don't call this.setState() here!
-
-
 
   state = {
     email: "",
@@ -22,7 +18,9 @@ export class Login extends Component {
     tmp:""
   };
 
-
+  prop_setState = async(target, value)=>{
+    await this.setState({[target]:value});
+  }
 
   // form on change
   onChange = (e) => {
@@ -115,41 +113,30 @@ export class Login extends Component {
     }
 
 
+    var data = {
+      email: this.state.email,
+      password: this.state.password,
+    };
+
     return (
       <div className="card card-body mt-4 mb-4">
         <h2>Log In</h2>
         <div>{modular}</div>
-        <form>
-          <div className="form-group">
-            <label >Email address</label>
-            <input type="email" className="form-control" id="exampleInputEmail1" name="email"  placeholder="Enter email" onChange={this.onChange}
-                      value={this.state.email}></input>
-          </div>
-          <div className="form-group">
-            <label >Password</label>
-            <input type="password" className="form-control" id="exampleInputPassword1"  name="password" placeholder="Password"  onChange={this.onChange}
-                      value={this.state.password}></input>
-          </div>
-          <div className="form-group">
-            <button type="submit" className="btn btn-primary" value="signin" onClick={this.onSubmit}>
-              Sign In
-            </button>
-          </div>
-          <div className="form-group">
-            <button type="click" className="btn btn-primary" value="signup" onClick={this.onSubmit}>
-              Sign Up
-            </button>
-          </div>
-        </form>
+        <Form prop_setState = {this.prop_setState} data = {data} />
+        <div className="form-group">
+          <button type="submit" className="btn btn-primary" value="signin" onClick={this.onSubmit}>
+            Sign In
+          </button>
+        </div>
+        <div className="form-group">
+          <button type="click" className="btn btn-primary" value="signup" onClick={this.onSubmit}>
+            Sign Up
+          </button>
+        </div>
       </div>
     );
   }
 }
 
-
-// Login.propTypes = {
-//   insertUser: PropTypes.function.isRequired,
-//   getUserByEmail: PropTypes.function.isRequired,
-// };
 
 export default Login;

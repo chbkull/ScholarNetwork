@@ -33,7 +33,7 @@ export default class Network extends Component {
         relationships: {
 
         },
-        initial_cypher: "MATCH (m:Authors) RETURN m LIMIT 20"
+        initial_cypher: ""
     }
 
     var tmp = new NeoVis.default(config);
@@ -49,9 +49,6 @@ export default class Network extends Component {
       case "affiliation":
         tmp = "please input author name";
         break;
-      // case "interests":
-      //   tmp = "please input interests";
-      //   break;
       case "recommendation":
         tmp = "please input interests";
         break;
@@ -116,19 +113,6 @@ export default class Network extends Component {
               Find his colleagues
             </label>
           </div>
-          {/* <div className="form-check">
-            <label className="form-check-label">
-              <input
-                type="radio"
-                className="form-check-input"
-                name="optionsRadios"
-                id="optionsRadios2"
-                value="interests"
-                onChange={this.onCheck}
-              />
-              Find authors with similar interets
-            </label>
-          </div> */}
           <div className="form-check">
             <label className="form-check-label">
               <input

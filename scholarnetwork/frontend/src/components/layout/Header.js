@@ -43,6 +43,21 @@ export class Header extends Component {
               </a>
             </li>
             <li className="nav-item">
+              <a className="nav-link" href="#/journal">
+                Journal
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="#/publisher">
+                Publisher
+              </a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="#/complex">
+                Complex
+              </a>
+            </li>
+            <li className="nav-item">
               <a className="nav-link" href="#/network">
                 Network
               </a>

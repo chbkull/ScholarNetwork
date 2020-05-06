@@ -1,36 +1,26 @@
 // TODO
 import React, { Component,Fragment } from 'react';
-import PropTypes from 'prop-types';
 import { Redirect } from "react-router-dom";
 import {getUserByEmail,getUserByID, deleteUserByID,updateUserByID} from "../action/user";
 import 'regenerator-runtime/runtime';
+import Form from '../modular/Form';
 import Alert from '../modular/Alert';
-import { async } from 'regenerator-runtime/runtime';
+
+
 
 export class Profile extends Component {
   // Don't call this.setState() here!
 
   state = {
     id : this.props.user.id,
-    affiliation: '',
-    interests: '',
-    history:'',
-    email: '',
-    password: '',
-    message: '',
-    status:'',
-    // author: '',
-    // name: '',
-    // url_picture: '',
-    // birthYear: '',
-    reset : {
-      id : '',
-      affiliation: '',
-      interests: '',
-      history:'',
-      email: '',
-      password: '',
-    }
+    affiliation: "",
+    interests: "",
+    history:"",
+    email: "",
+    password: "",
+    message: "",
+    status:"",
+    reset : "",
   };
 
   componentDidMount = async()=> {
@@ -49,24 +39,19 @@ export class Profile extends Component {
 
   }
 
-  onChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value }, () => { console.log("state:",this.state);});
-  };
 
   onDelete = async () => {
     var req = this.props.user;
     var res = { data:[], msg:""};
 
     await deleteUserByID(req,res);
-
-
-    if (res.msg !== "delete succeed"){
+    if (res.msg!=="delete succeed"){
       this.setState({
-        affiliation: this.state.reset.affiliation,
-        interests: this.state.reset.interests,
-        history:this.state.reset.history,
-        email: this.state.reset.email,
-        password: this.state.reset.password,
+        // affiliation: this.state.reset.affiliation,
+        // interests: this.state.reset.interests,
+        // history:this.state.reset.history,
+        // email: this.state.reset.email,
+        // password: this.state.reset.password,
         status:'Failed',
         message:"User not exist"
       });
@@ -103,43 +88,30 @@ export class Profile extends Component {
     e.preventDefault();
     var res = { data:[], msg:""};
     var req = this.state;
-    if (req.email === "" || req.password === ""){
-      await this.setState({
+    await getUserByEmail(req, res);
+    if (res.data.length !== 0 && res.data[0].id !== req.id){
+      this.setState({
         affiliation: this.state.reset.affiliation,
         interests: this.state.reset.interests,
         history:this.state.reset.history,
         email: this.state.reset.email,
         password: this.state.reset.password,
         status:'Failed',
-        message:"email and password is required"
+        message:"email must be unique"
       });
+
     }
-    else {
-      await getUserByEmail(req, res);
-
-      if (res.data.length !== 0 && res.data[0].id !== req.id){
-        this.setState({
-          affiliation: this.state.reset.affiliation,
-          interests: this.state.reset.interests,
-          history:this.state.reset.history,
-          email: this.state.reset.email,
-          password: this.state.reset.password,
-          status:'Failed',
-          message:"email must be unique"
-        });
-
-      }
-      else{
-        await updateUserByID(req, res);
-        this.setState({
-          reset:res.data,
-          status:'Succeeded',
-          message: 'Successfully updated user profile',
-        });
-        // document.getElementById('registerForm').reset();
-      }
+    else{
+      await updateUserByID(req, res);
+      this.setState({
+        reset:res.data,
+        status:'Succeeded',
+        message: 'Successfully updated user profile',
+      });
+      document.getElementById('registerForm').reset();
     }
   };
+
 
   onClick = ()=>{
     if (this.state.message === 'Successfully deleted a user'){
@@ -150,19 +122,24 @@ export class Profile extends Component {
     }
   }
 
+  prop_setState = async(target, value)=>{
+    await this.setState({[target]:value});
+    console.log(this.state);
+  }
+
   render() {
     const {
-      affiliation,
-      interests,
-      history,
-      email,
-      password,
       message,
       status,
-      // name,
-      // url_picture,
-      // birthYear,
     } = this.state;
+
+    var data = {
+      email: this.state.email,
+      password: this.state.password,
+      affiliation: this.state.affiliation,
+      interests: this.state.interests,
+      history: this.state.history,
+    };
 
     var modular = <Fragment></Fragment>;
 
@@ -176,90 +153,17 @@ export class Profile extends Component {
       return  <Redirect to="/" />;
     }
     return (
+
       <div className="card card-body mt-4 mb-4">
         <h2>User Profile</h2>
         <div>{modular}</div>
-        <form id="registerForm">
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              className="form-control"
-              // type="email"
-              type="text"
-              name="email"
-              onChange={this.onChange}
-              value={email}
-            />
-          </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              className="form-control"
-              type="password"
-              name="password"
-              onChange={this.onChange}
-              value={password}
-            />
-          </div>
-          <div className="form-group">
-            <label>Affiliation</label>
-            <textarea
-              className="form-control"
-              type="text"
-              name="affiliation"
-              onChange={this.onChange}
-              value={affiliation}
-            />
-          </div>
-          <div className="form-group">
-            <label>Interest</label>
-            <textarea
-              className="form-control"
-              type="text"
-              name="interests"
-              onChange={this.onChange}
-              value={interests}
-            />
-          </div>
-          <div className="form-group">
-            <label>History</label>
-            <textarea
-              className="form-control"
-              type="text"
-              name="history"
-              onChange={this.onChange}
-              value={history}
-            />
-          </div>
-          {/* <div className="form-group">
-            <label>url_picture</label>
-            <textarea
-              className="form-control"
-              type="text"
-              name="url_picture"
-              onChange={this.onChange}
-              value={url_picture}
-            />
-          </div> */}
-          {/* <div className="form-group">
-            <label>birthYear</label>
-            <textarea
-              className="form-control"
-              type="text"
-              name="birthYear"
-              onChange={this.onChange}
-              value={birthYear}
-            />
-          </div> */}
-          <div className="form-group">
-            <button type="click" className="btn btn-primary" onClick = {this.onUpdate}>
-              Edit
-            </button>
-            {/* <div>
-              <h3>{message}</h3>
-            </div> */}
-          </div>
-        </form>
+        <Form prop_setState = {this.prop_setState} data = {data} />
+
+        <div className="form-group">
+          <button type="click" className="btn btn-primary" onClick = {this.onUpdate}>
+            Edit
+          </button>
+        </div>
         <div className="form-group">
           <button type="click" className="btn btn-primary" onClick={this.onDelete}>
             Delete
@@ -271,12 +175,8 @@ export class Profile extends Component {
 }
 
 
-// Profile.propTypes = {
-//       // getUserByEmail: PropTypes.function.isRequired,
-//       // insertUser: PropTypes.function.isRequired,
-//       // updateUserByEmail: PropTypes.function.isRequired,
-//       deleteUserByID: PropTypes.function.isRequired,
-//     };
 
 
 export default Profile;
+
+
