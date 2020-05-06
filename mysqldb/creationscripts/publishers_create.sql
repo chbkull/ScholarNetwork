@@ -1,6 +1,6 @@
 CREATE TABLE publishers (
 	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name TEXT
+    name VARCHAR(512) UNIQUE
 );
 
 INSERT INTO publishers(name) (
