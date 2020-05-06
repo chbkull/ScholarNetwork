@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import ArticleSQL, AuthorSQL, UserSQL, PublisherSQL, JournalSQL, ComplexSQL
 from .serializers import ArticleSQLSerializer, AuthorSQLSerializer, UserSQLSerializer, PublisherSQLSerializer, JournalSQLSerializer, ComplexSQLSerializer
+from .managers import RelationshipSQLManager
 
 
 @api_view(['GET', 'POST'])
@@ -321,6 +322,20 @@ def JournalSQLSearchNameJson(request, format=None):
             return Response(serializer.data)
         else:
             return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def AddWrittenBy(request, format=None):
+    if request.method == 'POST':
+        if 'article_id' in request.data and 'author_id' in request.data:
+            article_id = request.data['article_id']
+            author_id = request.data['author_id']
+            RelationshipSQLManager.add_written_by(article_id, author_id)
+            return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return HttpResponse(status=status.HTTP_400_BAD_REQUEST)
+        
+
 
 @api_view(['GET'])
 def ComplexSQLArticlesInJournal(request, search_term, format=None):
