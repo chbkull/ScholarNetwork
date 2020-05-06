@@ -22,7 +22,7 @@ INSERT INTO authors (
 	SUBSTRING_INDEX(SUBSTRING_INDEX(attributes, ',', 4), ' ', -1) AS h_index_5,
 	SUBSTRING_INDEX(SUBSTRING_INDEX(attributes, ',', 5), ' ', -1) AS i10_index,
 	SUBSTRING_INDEX(SUBSTRING_INDEX(attributes, ',', 6), ' ', -1) AS i10_index_5,
-	SUBSTRING_INDEX(SUBSTRING_INDEX(attributes, '], ', -1), ']', 1) AS citedby_history,
+	REPLACE(REPLACE(REPLACE(SUBSTRING_INDEX(SUBSTRING_INDEX(attributes, '], ', -1), ']', 1), ', ', ', "'), ':', '":'), '{', '{"') AS citedby_history,
 	page, email, interests, url_picture
 	FROM authors_original
 );

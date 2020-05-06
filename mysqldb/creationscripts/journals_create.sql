@@ -1,6 +1,6 @@
 CREATE TABLE journals (
 	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    name TEXT
+    name VARCHAR(512) UNIQUE
 );
 
 INSERT INTO journals(name) (
