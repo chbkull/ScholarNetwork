@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>DataViz</title>
+        <style type="text/css">
+            #viz {
+                width: 900px;
+                height: 900px;
+            }
+        </style>
+        <script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+    </head>
+    <script>
+        function draw() {
+            var config = {
+                container_id: "viz",
+                server_url: "bolt://192.168.1.130:7687",
+                server_user: "neo4j",
+                server_password: "scholarnetwork",
+                labels: {
+                    "Authors": {
+                        caption: "name",
+                        size: "citedby"
+                    }, 
+                },
+                relationships: {
+
+                },
+                initial_cypher: "CREATE (n:Authors {id: 958298400, name: 'James Hols', email: '@huu.edu' }) RETURN n"
+            }
+            var viz = new NeoVis.default(config);
+            viz.render();
+        }
+    </script>
+    <body onload="draw()">
+        <div id ="viz"></div>
+    </body>
+</html>
