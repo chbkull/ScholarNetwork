@@ -1,0 +1,34 @@
+<form method = "post" action="/scholar/add">
+    <label>Author Name</label> <br>
+    <input type = "text" name = "name">
+    <br>
+    <label>Cited By</label> <br>
+    <input type = "number" name = "citedby">
+    <br>
+    <label>Affiliation</label> <br>
+    <input type = "text" name = "affiliation">
+    <br>
+    <label>URL Picture</label> <br>
+    <input type = "text" name = "url_picture">
+    <br>
+    <label>Attributes</label> <br>
+    <input type = "text" name = "attributes">
+    <br>
+    <label>Page</label> <br>
+    <input type = "number" name = "page">
+    <br>
+    <label>Interests</label> <br>
+    <input type = "text" name = "interests">
+    <br>
+    <label>Email</label> <br>
+    <input type = "text" name = "email">
+    <br> <br>
+    <input type = "submit" value = "Submit">
+</form>
+
+<form method = "delete" action="/delete/:id">
+    <label>Author ID</label> <br>
+    <input type = "number" name = "id">
+    <br><br>
+    <input type = "submit" value = "Submit">
+</form>
