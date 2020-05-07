@@ -1,3 +1,0 @@
-
-
-MATCH (f:Authors) WITH count(f) AS COUNT CREATE(n:Authors {name: 'KAMARKUS Marcus', email: '@med.unideb.hu', id: COUNT + 1, interests: split(NULL, ', ')}) WITH n AS n1 MATCH (p:Authors) WHERE p.email = n1.email AND p.name <> n1.name CREATE (p)-[:AFFILIATED]->(n1) CREATE (n1) -[:AFFILIATED]->(p)
