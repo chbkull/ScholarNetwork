@@ -1,22 +1,21 @@
-
-import React, { Component, Fragment } from 'react'
+import React, { Component, Fragment } from 'react';
 import 'regenerator-runtime/runtime';
-import {config,styling, complexCypher} from "../action/neo4j";
+import {complexCypher} from "../action/neo4j";
+import NeoViz from '../modular/NeoViz';
+
 export default class Network extends Component {
   state = {
     selector: "", //interests, affiliation, journals
     content:"",
     viz:"",
     placeholder:"",
+    cypher:"",
 
   };
 
-  componentDidMount=async ()=>{
+  setCypher = (c) =>{
 
-    var tmp = new NeoVis.default(config);
-    await this.setState({viz:tmp});
-    await this.state.viz.render();
-
+    this.setState({cypher:""});
   }
 
   onCheck = async (e) => {
@@ -46,14 +45,16 @@ export default class Network extends Component {
 
   onSubmit = async (e) => {
     e.preventDefault();
-    var content = this.state.content;
-    var cypher = await complexCypher(this.state.selector, content);
-    this.state.viz.renderWithCypher(cypher);
-    this.setState({ content: ""});
-
+    var c = await complexCypher(this.state.selector,this.state.content);
+    await this.setState({cypher:c});
   };
 
   render() {
+    var module = <Fragment></Fragment>;
+    if (this.state.cypher !==""){
+      module= <NeoViz cypher = {this.state.cypher} setCypher = {this.setCypher}/>;
+    }
+
     return (
       <div className="card card-body mt-4 mb-4">
         <h2> Network Detector</h2>
@@ -132,9 +133,10 @@ export default class Network extends Component {
             </button>
           </div>
         </form>
-        <div id ="viz" style = {styling}></div>
+        {module}
       </div>
     );
   }
 
 }
+

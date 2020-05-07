@@ -49,12 +49,14 @@ export default class Publisher extends Component {
     }
   };
 
+
+
+
   onClick = async (e)=>{
     console.log("pass id",e.target.value);
     await this.setState({ id: e.target.value}, () => {
       console.log("state", this.state);
     });
-
   }
 
   render() {
@@ -119,6 +121,8 @@ export default class Publisher extends Component {
        </div>
        {table}
        {detail}
+
+
        </div>
      </Fragment>
     )

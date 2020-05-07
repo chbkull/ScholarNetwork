@@ -57,16 +57,18 @@ export class Header extends Component {
                 Complex
               </a>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <a className="nav-link" href="#/network">
                 Network
               </a>
-            </li>
+            </li> */}
           </ul>
           <form className="form-inline my-2 my-lg-0">
-            <input className="form-control mr-sm-2" type="text" placeholder="Search"></input>
+            {/* <input className="form-control mr-sm-2" type="text" placeholder="Search"></input> */}
             <button className="btn btn-secondary my-2 my-sm-0" type="submit">
-              Network
+              <a className="nav-link" href="#/network">
+                Network
+              </a>
             </button>
           </form>
         </div>

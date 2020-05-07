@@ -9,6 +9,7 @@ import Article from "./receiver/Article";
 import Author from "./receiver/Author";
 import Showcase from "./layout/Showcase";
 import Network from "./receiver/Network";
+import NeoViz from "./modular/NeoViz";
 import Complex  from "./receiver/Complex";
 import Journal from "./receiver/Journal";
 import Publisher from "./receiver/Publisher";
@@ -25,24 +26,11 @@ class App extends Component {
   };
 
 
-  // setArticle = (i) => {
-  //   this.setState({ article: i }, () => {
-  //     console.log(this.state);
-  //   });
-  // };
-
-  // setAuthor = (i) => {
-  //   this.setState({ author: i }, () => {
-  //     console.log(this.state);
-  //   });
-  // };
-
   render() {
     return (
       <Router>
         <Fragment>
           <div className="container">
-
             <Switch>
               <Route
                 exact

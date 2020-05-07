@@ -4,7 +4,6 @@ import 'regenerator-runtime/runtime';
 import Form from './Form';
 import Alert from './Alert';
 
-
 export default class PublisherDetail extends Component {
   state = {
     id:this.props.publisher,
@@ -15,6 +14,7 @@ export default class PublisherDetail extends Component {
     operation:this.props.operation,
     buttons:"",
     module:"",
+
   };
 
   prop_setState= async(target, value)=>{
@@ -50,6 +50,7 @@ export default class PublisherDetail extends Component {
         </div>);
     }
     await this.setState({buttons:btn, module:mdl});
+
   }
 
   onDelete = async () => {
@@ -88,8 +89,6 @@ export default class PublisherDetail extends Component {
       });
     }
     else {
-
-
         await updatePublisherByID(req, res);
         if (res.msg === "update succeed"){
           this.setState({
@@ -98,7 +97,6 @@ export default class PublisherDetail extends Component {
             message: 'Update succeed',
             operation:"update",
           });
-
 
       }
 
@@ -123,6 +121,7 @@ export default class PublisherDetail extends Component {
           message: 'Insert succeed',
           operation:"insert",
         });
+
 
     }
     console.log(this.state);

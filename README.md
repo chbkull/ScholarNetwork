@@ -144,7 +144,7 @@ npm init -y
 2. package intall // update
 
 ```
-npm install @babel/core @babel/preset-env @babel/preset-react @babel/runtime axios babel-eslint babel-loader babel-plugin-transform-async-to-generator babel-plugin-transform-class-properties eslint eslint-config-airbnb eslint-config-prettier eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react husky prettier pretty-quick prop-types react react-dom react-router-dom react-transition-group semantic-ui-css semantic-ui-react webpack webpack-cli
+npm install @babel/core @babel/preset-env @babel/preset-react @babel/runtime axios babel-eslint babel-loader babel-plugin-transform-async-to-generator babel-plugin-transform-class-properties eslint eslint-config-airbnb eslint-config-prettier eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react husky prettier pretty-quick prop-types react react-dom react-router-dom react-transition-group semantic-ui-css semantic-ui-react webpack webpack-cli victory
 
 ```
 

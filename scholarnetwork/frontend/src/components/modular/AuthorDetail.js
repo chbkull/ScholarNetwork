@@ -4,6 +4,7 @@ import 'regenerator-runtime/runtime';
 import { VictoryBar,VictoryChart,VictoryAxis, VictoryTheme } from 'victory';
 import Form from './Form';
 import Alert from './Alert';
+import {authorCypher, config, styling} from "../action/neo4j";
 
 export class AuthorDetail extends Component {
 
@@ -28,6 +29,7 @@ export class AuthorDetail extends Component {
     operation:this.props.operation,
     buttons:"",
     module:"",
+    viz:"",
   }
 
 
@@ -72,11 +74,7 @@ export class AuthorDetail extends Component {
         reset : res.data[0],
       });
 
-      btn =(
-        <div>
-          <button type="button" className="btn btn-primary" onClick={this.onSubmit} name="edit" onClick={this.onUpdate} >Edit</button>
-          <button type="button" className="btn btn-primary" onClick={this.onSubmit} name="delete" onClick={this.onDelete}>delete</button>
-        </div>);
+
 
       var history = JSON.parse(this.state.citedby_history);
       var axis_x = Object.keys(history);
@@ -123,8 +121,18 @@ export class AuthorDetail extends Component {
         <img src={this.state.url_picture} />
       </Fragment>
       );
+
+      btn =(
+        <div>
+          <button type="button" className="btn btn-primary" onClick={this.onSubmit} name="edit" onClick={this.onUpdate} >Edit</button>
+          <button type="button" className="btn btn-primary" onClick={this.onSubmit} name="delete" onClick={this.onDelete}>delete</button>
+        </div>);
     }
     await this.setState({buttons:btn, module:mdl});
+
+    var tmp = new NeoVis.default(config);
+    await this.setState({viz:tmp});
+    await this.state.viz.render();
   }
 
   onDelete = async () => {
@@ -148,6 +156,8 @@ export class AuthorDetail extends Component {
           message: 'Delete succeed',
           status:'Succeeded',
         });
+        var cypher = await authorCypher(this.state.operation, req);
+        this.state.viz.renderWithCypher(cypher);
 
       }
 
@@ -180,7 +190,10 @@ export class AuthorDetail extends Component {
           message: 'Successfully updated author',
           operation:"update",
         });
+        var cypher = await authorCypher(this.state.operation, req);
+        this.state.viz.renderWithCypher(cypher);
       }
+
 
     }
   };
@@ -210,6 +223,9 @@ export class AuthorDetail extends Component {
         message: 'Insert succeed',
         operation:"insert",
       });
+
+      var cypher = await authorCypher(this.state.operation, res.data[0]);
+      this.state.viz.renderWithCypher(cypher);
     }
     console.log(this.state);
     await this.clear();
@@ -277,18 +293,21 @@ export class AuthorDetail extends Component {
     }
 
     return (
-      <Fragment>
 
-        {modular}
-        <div className="alert alert-dismissible alert-primary">
-          <button type="button" className="close" data-dismiss="alert" onClick = {this.onClose}>&times;</button>
-            <div>
-              {this.state.module}
-              <Form prop_setState = {this.prop_setState} data = {data} />
-              {this.state.buttons}
-            </div>
-        </div>
+      <Fragment>
+      {modular}
+
+      <div className="alert alert-dismissible alert-primary">
+        <button type="button" className="close" data-dismiss="alert" onClick = {this.onClose}>&times;</button>
+          <div>
+            {this.state.module}
+            <Form prop_setState = {this.prop_setState} data = {data} />
+            {this.state.buttons}
+          </div>
+      </div>
+      <div id ="viz" style = {styling}></div>
       </Fragment>
+
     );
   }
 }

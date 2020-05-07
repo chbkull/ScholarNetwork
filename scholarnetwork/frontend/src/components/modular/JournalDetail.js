@@ -3,6 +3,7 @@ import {getJournalByID,insertJournal, deleteJournalByID, updateJournalByID} from
 import 'regenerator-runtime/runtime';
 import Form from './Form';
 import Alert from './Alert';
+import {journalCypher, config, styling} from "../action/neo4j";
 
 
 export default class JournalDetail extends Component {
@@ -15,6 +16,7 @@ export default class JournalDetail extends Component {
     operation:this.props.operation,
     buttons:"",
     module:"",
+    viz:"",
   };
 
   prop_setState= async(target, value)=>{
@@ -49,6 +51,18 @@ export default class JournalDetail extends Component {
         </div>);
     }
     await this.setState({buttons:btn, module:mdl});
+
+    var tmp = new NeoVis.default(config);
+    await this.setState({viz:tmp});
+    await this.state.viz.render();
+
+    // if (this.state.operation === "search"){
+    //   var req = this.state;
+    //   var cypher = journalCypher(this.state.operation, req);
+    //   console.log(cypher);
+    //   this.state.viz.renderWithCypher(cypher);
+    // }
+
   }
 
   onDelete = async () => {
@@ -71,6 +85,8 @@ export default class JournalDetail extends Component {
           message: 'Delete succeed',
           status:'Succeeded',
         });
+        var cypher = await journalCypher("delete", req);
+        this.state.viz.renderWithCypher(cypher);
 
       }
   };
@@ -97,8 +113,9 @@ export default class JournalDetail extends Component {
             operation:"update",
           });
         }
-
-
+        var cypher = await journalCypher("update", req);
+        console.log(cypher);
+        this.state.viz.renderWithCypher(cypher);
 
     }
 
@@ -120,7 +137,10 @@ export default class JournalDetail extends Component {
           message: 'Insert succeed',
           operation:"insert",
         });
+        var cypher = await journalCypher("insert", res.data[0]);
+        this.state.viz.renderWithCypher(cypher);
     }
+
     console.log(this.state);
     await this.clear();
   }
@@ -175,6 +195,7 @@ export default class JournalDetail extends Component {
               {this.state.buttons}
             </div>
         </div>
+        <div id ="viz" style = {styling}></div>
       </Fragment>
     );
   }

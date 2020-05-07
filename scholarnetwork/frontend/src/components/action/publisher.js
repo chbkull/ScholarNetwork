@@ -16,7 +16,7 @@ export const getPublisherByID = async(req,res) => {
 };
 export const getPublisherByName = async(req,res) => {
   await axios
-    .get("api/publishers/searchname" + req.content)
+    .get("api/publishers/searchname/" + req.content)
     .then((result) => {
 
       res.data = result.data;

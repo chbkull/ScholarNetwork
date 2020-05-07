@@ -6,6 +6,8 @@ import {getJournalByID} from '../action/journal';
 import 'regenerator-runtime/runtime';
 import Form from './Form';
 import Alert from './Alert';
+import {articleCypher, config, styling} from "../action/neo4j";
+
 
 export default class ArticleDetail extends Component {
   state = {
@@ -26,6 +28,7 @@ export default class ArticleDetail extends Component {
     operation:this.props.operation,
     buttons:"",
     module:"",
+    viz:"",
   };
 
   prop_setState= async(target, value)=>{
@@ -70,6 +73,9 @@ export default class ArticleDetail extends Component {
         </div>);
     }
     await this.setState({buttons:btn, module:mdl});
+    var tmp = new NeoVis.default(config);
+    await this.setState({viz:tmp});
+    await this.state.viz.render();
   }
 
   onDelete = async () => {
@@ -93,15 +99,16 @@ export default class ArticleDetail extends Component {
           message: 'Delete succeed',
           status:'Succeeded',
         });
+        var cypher = await articleCypher(this.state.operation, req);
+        this.state.viz.renderWithCypher(cypher);
 
       }
   };
 
   onUpdate = async () => {
-    var res = { data:[], msg:""};
-    var req = this.state;
+
     if(this.state.journal_id===0) this.setState({journal_id:null});
-    if(this.publisher_id===0)this.setState({publisher_id:null});
+    if(this.state.publisher_id===0)this.setState({publisher_id:null});
     if (this.state.author_id===""||this.state.citations===""|| this.state.year===""){
       this.setState({
         status:'Failed',
@@ -138,6 +145,8 @@ export default class ArticleDetail extends Component {
         });
       }
       else{
+        var res = { data:[], msg:""};
+        var req = this.state;
         await updateArticleByID(req, res);
         if (res.msg === "update succeed"){
           this.setState({
@@ -147,7 +156,12 @@ export default class ArticleDetail extends Component {
             operation:"update",
           });
         }
-
+        // if(!this.state.journal_id) this.setState({journal_id:""});
+        if(!this.state.author_id) req.author_id = 0;
+        console.log(req);
+        var cypher = await articleCypher(this.state.operation, req);
+        console.log(cypher);
+        this.state.viz.renderWithCypher(cypher);
       }
 
     }
@@ -155,8 +169,7 @@ export default class ArticleDetail extends Component {
   };
 
   onInsert = async()=>{
-    var res = { data:[], msg:""};
-    var req = this.state;
+
     console.log("insert",req);
     if(this.state.journal_id===0) this.setState({journal_id:null});
     if(this.publisher_id===0)this.setState({publisher_id:null});
@@ -196,6 +209,8 @@ export default class ArticleDetail extends Component {
         });
       }
       else {
+        var res = { data:[], msg:""};
+        var req = this.state;
         await insertArticle(req, res);
         this.setState({
           reset:res.data,
@@ -203,6 +218,10 @@ export default class ArticleDetail extends Component {
           message: 'Insert succeed',
           operation:"insert",
         });
+        var cypher = await articleCypher(this.state.operation, res.data[0]);
+        console.log(cypher);
+        this.state.viz.renderWithCypher(cypher);
+
       }
     }
     console.log(this.state);
@@ -281,6 +300,7 @@ export default class ArticleDetail extends Component {
               {this.state.buttons}
             </div>
         </div>
+        <div id ="viz" style = {styling}></div>
       </Fragment>
     );
 
